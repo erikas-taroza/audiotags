@@ -1,7 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:id3tags/id3tags.dart';
 
 void main() {
@@ -15,13 +13,15 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  final _id3tagsPlugin = Id3Tags();
+class _MyAppState extends State<MyApp>
+{
+    //TODO: Enter the path 
+    // to the mp3 file here ----v
+    static const String path = "/path/to/song.mp3";
 
-  @override
-  void initState() {
-    super.initState();
-  }
+    @override
+    void initState()
+    { super.initState(); }
 
     @override
     Widget build(BuildContext context)
@@ -32,12 +32,28 @@ class _MyAppState extends State<MyApp> {
                     title: const Text('Plugin example app'),
                 ),
                 body: Center(
-                    child: ElevatedButton(
-                        child: const Text("Write"),
-                        onPressed: () async => Id3Tags.write("/home/erikas/Music/test2.mp3", Tag(
-                            title: "Test",
-                            artist: "testsetestest"
-                        )),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            ElevatedButton(
+                                child: const Text("Write"),
+                                onPressed: () => Id3Tags.write(path, Tag(
+                                    title: "Title",
+                                    artist: "Artist",
+                                    picture: Uint8List.fromList([0, 0, 0, 0])
+                                )),
+                            ),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                                child: const Text("Read"),
+                                onPressed: () async {
+                                    Tag tag = await Id3Tags.read(path);
+                                    debugPrint(tag.title);
+                                    debugPrint(tag.artist);
+                                    debugPrint(tag.picture.toString());
+                                },
+                            )
+                        ],
                     )
                 ),
             ),

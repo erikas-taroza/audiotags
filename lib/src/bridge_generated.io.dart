@@ -105,13 +105,13 @@ class Id3TagsWire implements FlutterRustBridgeWireBase {
           lookup)
       : _lookup = lookup;
 
-//   void store_dart_post_cobject(
-//     int ptr,
-//   ) {
-//     return _store_dart_post_cobject(
-//       ptr,
-//     );
-//   }
+  void store_dart_post_cobject(
+    DartPostCObject ptr
+  ) {
+    return _store_dart_post_cobject(
+      ptr.address,
+    );
+  }
 
   late final _store_dart_post_cobjectPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int)>>(
@@ -222,11 +222,6 @@ class Id3TagsWire implements FlutterRustBridgeWireBase {
           'free_WireSyncReturnStruct');
   late final _free_WireSyncReturnStruct = _free_WireSyncReturnStructPtr
       .asFunction<void Function(WireSyncReturnStruct)>();
-
-  @override
-  void store_dart_post_cobject(DartPostCObject ptr) {
-    // TODO: implement store_dart_post_cobject
-  }
 }
 
 class wire_uint_8_list extends ffi.Struct {
