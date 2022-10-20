@@ -1,7 +1,4 @@
-import 'id3tags_platform_interface.dart';
+library id3tags;
 
-class Id3tags {
-  Future<String?> getPlatformVersion() {
-    return Id3tagsPlatform.instance.getPlatformVersion();
-  }
-}
+export 'src/id3tags.dart';
+export 'src/bridge_definitions.dart' show Tag;
