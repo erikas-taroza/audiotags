@@ -1,6 +1,6 @@
 
 
-default: gen lint
+default: gen #lint
 
 gen:
     flutter pub get
@@ -12,9 +12,9 @@ gen:
         --dart-decl-output lib/bridge_definitions.dart \
         --wasm
 
-lint:
-    cd native && cargo fmt
-    dart format .
+# lint:
+#     cd native && cargo fmt
+#     dart format .
 
 clean:
     flutter clean

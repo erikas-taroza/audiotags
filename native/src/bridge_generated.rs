@@ -28,7 +28,7 @@ fn wire_read_impl(port_: MessagePort, path: impl Wire2Api<String> + UnwindSafe) 
         },
         move || {
             let api_path = path.wire2api();
-            move |task_callback| read(api_path)
+            move |task_callback| Ok(read(api_path))
         },
     )
 }
@@ -46,7 +46,7 @@ fn wire_write_impl(
         move || {
             let api_path = path.wire2api();
             let api_data = data.wire2api();
-            move |task_callback| write(api_path, api_data)
+            move |task_callback| Ok(write(api_path, api_data))
         },
     )
 }

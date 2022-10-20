@@ -3,17 +3,26 @@ use id3::{
     Content, Frame, Tag as id3Tag, TagLike,
 };
 
-use crate::ID3Error;
+#[derive(Debug)]
+pub struct ID3Error(pub String);
+
+impl std::fmt::Display for ID3Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "There was an error with id3tags:\n {}", self.0)
+    }
+}
+
+impl std::error::Error for ID3Error {}
 
 #[derive(Default)]
 pub struct Tag {
-    title: Option<String>,
-    artist: Option<String>,
-    album: Option<String>,
-    year: Option<i32>,
-    genre: Option<String>,
-    duration: Option<u32>,
-    picture: Option<Vec<u8>>,
+    pub title: Option<String>,
+    pub artist: Option<String>,
+    pub album: Option<String>,
+    pub year: Option<i32>,
+    pub genre: Option<String>,
+    pub duration: Option<u32>,
+    pub picture: Option<Vec<u8>>,
 }
 
 pub fn read(path: String) -> Result<Tag, ID3Error> {
