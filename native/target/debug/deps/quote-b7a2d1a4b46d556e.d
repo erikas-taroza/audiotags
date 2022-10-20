@@ -1,0 +1,13 @@
+/home/erikas/ROOT/code/rust/id3tags/target/debug/deps/quote-b7a2d1a4b46d556e.rmeta: /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/lib.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/ext.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/format.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/ident_fragment.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/to_tokens.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/runtime.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/spanned.rs
+
+/home/erikas/ROOT/code/rust/id3tags/target/debug/deps/libquote-b7a2d1a4b46d556e.rlib: /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/lib.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/ext.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/format.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/ident_fragment.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/to_tokens.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/runtime.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/spanned.rs
+
+/home/erikas/ROOT/code/rust/id3tags/target/debug/deps/quote-b7a2d1a4b46d556e.d: /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/lib.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/ext.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/format.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/ident_fragment.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/to_tokens.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/runtime.rs /home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/spanned.rs
+
+/home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/lib.rs:
+/home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/ext.rs:
+/home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/format.rs:
+/home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/ident_fragment.rs:
+/home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/to_tokens.rs:
+/home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/runtime.rs:
+/home/erikas/.cargo/registry/src/github.com-1ecc6299db9ec823/quote-1.0.21/src/spanned.rs:

@@ -1,0 +1,1 @@
+/home/erikas/ROOT/code/rust/id3tags/target/release/libid3tags.rlib: /home/erikas/ROOT/code/rust/id3tags/src/api.rs /home/erikas/ROOT/code/rust/id3tags/src/id3error.rs /home/erikas/ROOT/code/rust/id3tags/src/lib.rs
