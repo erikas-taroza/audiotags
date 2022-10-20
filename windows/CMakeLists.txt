@@ -48,6 +48,6 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.
 set(id3tags_bundled_libraries
-  ""
+  "${CMAKE_CURRENT_SOURCE_DIR}/native.dll"
   PARENT_SCOPE
 )
