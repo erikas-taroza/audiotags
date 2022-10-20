@@ -1,15 +1,14 @@
-import 'package:id3tags/src/bridge_definitions.dart' show Tag;
 import 'package:id3tags/src/ffi.dart';
 
 class Id3Tags
 {
     static Future<Tag> read(String path) async
     {
-        return api.read(path: path);
+        return await api.read(path: path);
     }
 
     static Future<void> write(String path, Tag tag) async
     {
-        return api.write(path: path, data: tag);
+        return await api.write(path: path, data: tag);
     }
 }
