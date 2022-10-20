@@ -1,203 +1,131 @@
-use id3::{Tag as id3Tag, TagLike, frame::{Picture, PictureType}, Frame, Content};
+use id3::{
+    frame::{Picture, PictureType},
+    Content, Frame, Tag as id3Tag, TagLike,
+};
 
 use crate::ID3Error;
 
 #[derive(Default)]
-pub struct Tag
-{
-    path:String,
-    internal_tag:Option<id3Tag>,
-    title:Option<String>,
-    artist:Option<String>,
-    album:Option<String>,
-    year:Option<i32>,
-    genre:Option<String>,
-    duration:Option<u32>,
-    picture:Option<Vec<u8>>
+pub struct Tag {
+    title: Option<String>,
+    artist: Option<String>,
+    album: Option<String>,
+    year: Option<i32>,
+    genre: Option<String>,
+    duration: Option<u32>,
+    picture: Option<Vec<u8>>,
 }
 
-impl Tag
-{
-    pub fn new(path:&str) -> Self
-    {
-        Tag
-        {
-            path: path.to_string(),
-            internal_tag: Some(id3Tag::new()),
-            title: Some(String::default()),
-            artist: Some(String::default()),
-            album: Some(String::default()),
-            year: Some(i32::default()),
-            genre: Some(String::default()),
-            duration: Some(u32::default()),
-            picture: Some(Vec::default())
+pub fn read(path: String) -> Result<Tag, ID3Error> {
+    let id3tag = id3Tag::read_from_path(path);
+
+    match id3tag {
+        Err(err) => {
+            return Err(ID3Error(format!(
+                "{}: {}",
+                err.kind.to_string(),
+                err.description
+            )));
         }
-    }
 
-    pub fn read(&mut self) -> Result<(), ID3Error>
-    {
-        let id3tag = id3Tag::read_from_path(self.path.as_str());
-
-        match id3tag
-        {
-            Err(err) => {
-                return Err(ID3Error(format!("{}: {}", err.kind.to_string(), err.description)));
-            },
-
-            Ok(tag) => {
-                self.title = tag.title().map(|f| f.to_string());
-                self.artist = tag.artist().map(|f| f.to_string());
-                self.album = tag.album().map(|f| f.to_string());
-                self.year = tag.year();
-                self.genre = tag.genre().map(|f| f.to_string());
-                self.duration = tag.duration();
-
-                let pictures = tag.pictures().collect::<Vec<_>>();
-                self.picture = if pictures.len() > 0 {
+        Ok(tag) => {
+            let pictures = tag.pictures().collect::<Vec<_>>();
+            Ok(Tag {
+                title: tag.title().map(|f| f.to_string()),
+                artist: tag.artist().map(|f| f.to_string()),
+                album: tag.album().map(|f| f.to_string()),
+                year: tag.year(),
+                genre: tag.genre().map(|f| f.to_string()),
+                duration: tag.duration(),
+                picture: if pictures.len() > 0 {
                     Some(pictures.get(0).unwrap().data.clone())
-                } else { None };
-
-                Ok(())
-            }
+                } else {
+                    None
+                },
+            })
         }
     }
-
-    pub fn write(&self, path:&str) -> Result<(), ID3Error>
-    {
-        if let Some(internal_tag) = &self.internal_tag
-        {
-            let result = internal_tag.write_to_path(path, id3::Version::Id3v24);
-            
-            match result
-            {
-                Err(err) => {
-                    return Err(ID3Error(format!("{}: {}", err.kind.to_string(), err.description)));
-                }
-                Ok(()) => return Ok(())
-            }
-        }
-
-        Err(ID3Error("Failed to write metadata.".to_string()))
-    }
-
-    pub fn set_title(&mut self, title:String)
-    {
-        self.title = Some(title.clone());
-        if let Some(internal_tag) = &mut self.internal_tag
-        { internal_tag.set_title(title); }
-    }
-
-    pub fn get_title(&self) -> &Option<String>
-    { &self.title }
-
-    pub fn set_artist(&mut self, artist:String)
-    {
-        self.artist = Some(artist.clone());
-        if let Some(internal_tag) = &mut self.internal_tag
-        { internal_tag.set_artist(artist); }
-    }
-
-    pub fn get_artist(&self) -> &Option<String>
-    { &self.artist }
-
-    pub fn set_album(&mut self, album:String)
-    {
-        self.album = Some(album.clone());
-        if let Some(internal_tag) = &mut self.internal_tag
-        { internal_tag.set_album(album); }
-    }
-
-    pub fn get_album(&self) -> &Option<String>
-    { &self.album }
-
-    pub fn set_year(&mut self, year:i32)
-    {
-        self.year = Some(year.clone());
-        if let Some(internal_tag) = &mut self.internal_tag
-        { internal_tag.set_year(year); }
-    }
-
-    pub fn get_year(&self) -> &Option<i32>
-    { &self.year }
-
-    pub fn set_genre(&mut self, genre:String)
-    {
-        self.genre = Some(genre.clone());
-        if let Some(internal_tag) = &mut self.internal_tag
-        { internal_tag.set_genre(genre); }
-    }
-
-    pub fn get_genre(&self) -> &Option<String>
-    { &self.genre }
-
-    pub fn set_duration(&mut self, duration:u32)
-    {
-        self.duration = Some(duration.clone());
-        if let Some(internal_tag) = &mut self.internal_tag
-        { internal_tag.set_duration(duration); }
-    }
-
-    pub fn get_duration(&self) -> &Option<u32>
-    { &self.duration }
-
-    pub fn set_picture(&mut self, picture:Vec<u8>)
-    {
-        self.picture = Some(picture.clone());
-        if let Some(internal_tag) = &mut self.internal_tag
-        {
-            let picture = Picture {
-                mime_type: "image/jpeg".to_string(),
-                picture_type: PictureType::CoverFront,
-                description: "Artwork".to_string(),
-                data: picture
-            };
-
-            internal_tag.add_frame(Frame::with_content("APIC", Content::Picture(picture)));
-        }
-    }
-
-    pub fn get_picture(&self) -> &Option<Vec<u8>>
-    { &self.picture }
 }
 
+pub fn write(path: String, data: Tag) -> Result<(), ID3Error> {
+    let mut tag: id3Tag = id3Tag::new();
 
-/// TEST
+    if data.title.is_some() {
+        tag.set_title(data.title.unwrap());
+    }
+    if data.artist.is_some() {
+        tag.set_artist(data.artist.unwrap());
+    }
+    if data.album.is_some() {
+        tag.set_album(data.album.unwrap());
+    }
+    if data.year.is_some() {
+        tag.set_year(data.year.unwrap());
+    }
+    if data.genre.is_some() {
+        tag.set_genre(data.genre.unwrap());
+    }
+    if data.duration.is_some() {
+        tag.set_duration(data.duration.unwrap());
+    }
+
+    if data.picture.is_some() {
+        let picture = Picture {
+            mime_type: "image/jpeg".to_string(),
+            picture_type: PictureType::CoverFront,
+            description: "Artwork".to_string(),
+            data: data.picture.unwrap(),
+        };
+
+        tag.add_frame(Frame::with_content("APIC", Content::Picture(picture)));
+    }
+
+    let result = tag.write_to_path(path, id3::Version::Id3v24);
+    match result {
+        Err(err) => {
+            return Err(ID3Error(format!(
+                "{}: {}",
+                err.kind.to_string(),
+                err.description
+            )))
+        }
+        Ok(()) => return Ok(()),
+    }
+}
 
 #[cfg(test)]
 mod tests {
+    use crate::api::read;
+
     use super::*;
 
-    const PATH:&str = "/home/erikas/Music/test2.mp3";
-
     #[test]
-    fn read()
-    {
-        let mut tag = Tag::new(PATH);
-        tag.read().unwrap();
+    fn read_tag() {
+        let tag = read("/home/erikas/Music/test2.mp3".to_string()).expect("Could not read tag.");
 
-        println!("{:?}", tag.get_title());
-        println!("{:?}", tag.get_artist());
-        println!("{:?}", tag.get_album());
-        println!("{:?}", tag.get_year());
-        println!("{:?}", tag.get_genre());
-        println!("{:?}", tag.get_duration());
-        println!("{:?}", tag.get_picture());
+        println!("{:?}", tag.title);
+        println!("{:?}", tag.artist);
+        println!("{:?}", tag.album);
+        println!("{:?}", tag.year);
+        println!("{:?}", tag.genre);
+        println!("{:?}", tag.duration);
+        println!("{:?}", tag.picture);
     }
 
     #[test]
-    fn write()
-    {
-        const PATH:&str = "/home/erikas/Music/test2.mp3";
-        let mut tag = Tag::new(PATH);
-        tag.read().unwrap();
-
-        tag.set_title("This is a title.".to_string());
-        tag.set_artist("This is an artist.".to_string());
-        tag.set_album("This is an album.".to_string());
-        tag.set_year(2022);
-        tag.set_genre("This is a genre.".to_string());
-        tag.set_duration(20);
-        tag.set_picture(std::fs::read("/home/erikas/Downloads/pfp.jpg").unwrap());
-        tag.write(PATH).unwrap();
+    fn write_tag() {
+        let _tag = write(
+            "/home/erikas/Music/test2.mp3".to_string(),
+            Tag {
+                title: Some("Title".to_string()),
+                artist: Some("Artist".to_string()),
+                album: Some("Album".to_string()),
+                year: Some(2022),
+                genre: Some("Genre".to_string()),
+                duration: Some(777),
+                picture: Some(vec![255]),
+            },
+        )
+        .expect("Failed to write tag.");
     }
 }

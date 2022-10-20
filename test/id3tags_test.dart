@@ -7,7 +7,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class MockId3tagsPlatform
     with MockPlatformInterfaceMixin
     implements Id3tagsPlatform {
-
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
 }
