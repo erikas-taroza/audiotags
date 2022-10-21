@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:id3tags/id3tags.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,7 +53,17 @@ class _MyAppState extends State<MyApp>
                                     debugPrint(tag.artist);
                                     debugPrint(tag.picture.toString());
                                 },
-                            )
+                            ),
+                            //TODO: You will need to setup permissions for mobile:
+                            
+                            // const SizedBox(height: 10),
+                            // ElevatedButton(
+                            //     child: const Text("Perms"),
+                            //     onPressed: () async {
+                            //         var result = await Permission.storage.request();
+                            //         debugPrint(result.toString());
+                            //     },
+                            // ),
                         ],
                     )
                 ),
