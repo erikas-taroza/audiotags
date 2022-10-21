@@ -38,7 +38,7 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
-set(CRATE_NAME "native")
+set(CRATE_NAME "id3tags")
 set(CRATE_NAME ${CRATE_NAME} PARENT_SCOPE)
 add_subdirectory(${CRATE_NAME})
 # List of absolute paths to libraries that should be bundled with the plugin.
