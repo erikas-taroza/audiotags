@@ -1,9 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:id3tags/id3tags.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -18,7 +20,7 @@ class _MyAppState extends State<MyApp>
 {
     //TODO: Enter the path 
     // to the mp3 file here ----v
-    static const String path = "/path/to/song.mp3";
+    String path = "/path/to/song.mp3";
 
     @override
     void initState()
@@ -62,6 +64,9 @@ class _MyAppState extends State<MyApp>
                             //     onPressed: () async {
                             //         var result = await Permission.storage.request();
                             //         debugPrint(result.toString());
+                            //         // Testing QOL
+                            //         FilePickerResult? r = await FilePicker.platform.pickFiles();
+                            //         if(r != null) path = r.files.single.path!;
                             //     },
                             // ),
                         ],

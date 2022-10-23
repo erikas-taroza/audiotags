@@ -1,4 +1,5 @@
 #import "Id3tagsPlugin.h"
+#import "../Runner/bridge_generated.h"
 #if __has_include(<id3tags/id3tags-Swift.h>)
 #import <id3tags/id3tags-Swift.h>
 #else
@@ -10,6 +11,7 @@
 
 @implementation Id3tagsPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
+  dummy_method_to_enforce_bundling();
   [SwiftId3tagsPlugin registerWithRegistrar:registrar];
 }
 @end
