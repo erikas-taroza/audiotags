@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp>
 {
     //TODO: Enter the path 
     // to the mp3 file here ----v
-    String path = "/home/erikas/Music/BitBeat/test.mp3";//"/path/to/song.mp3";
+    String path = "/path/to/song.mp3";
 
     @override
     void initState()
