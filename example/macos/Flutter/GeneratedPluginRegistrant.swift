@@ -5,8 +5,8 @@
 import FlutterMacOS
 import Foundation
 
-import id3tags
+import audiotags
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  Id3tagsPlugin.register(with: registry.registrar(forPlugin: "Id3tagsPlugin"))
+  AudiotagsPlugin.register(with: registry.registrar(forPlugin: "AudiotagsPlugin"))
 }

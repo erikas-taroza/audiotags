@@ -1,4 +1,4 @@
-# id3tags
+# audiotags
 
 A new Flutter plugin project.
 

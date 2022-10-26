@@ -1,0 +1,6 @@
+package com.erikas.audiotags_example
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity() {
+}

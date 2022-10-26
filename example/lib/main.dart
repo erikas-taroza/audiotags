@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:id3tags/id3tags.dart';
+import 'package:audiotags/audiotags.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp>
                         children: [
                             ElevatedButton(
                                 child: const Text("Write"),
-                                onPressed: () => Id3Tags.write(path, Tag(
+                                onPressed: () => AudioTags.write(path, Tag(
                                     title: "Title",
                                     artist: "Artist",
                                     picture: Uint8List.fromList([0, 0, 0, 0])
@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp>
                             ElevatedButton(
                                 child: const Text("Read"),
                                 onPressed: () async {
-                                    Tag tag = await Id3Tags.read(path);
+                                    Tag tag = await AudioTags.read(path);
                                     debugPrint(tag.title);
                                     debugPrint(tag.artist);
                                     debugPrint(tag.picture.toString());

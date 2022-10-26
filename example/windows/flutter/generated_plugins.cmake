@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  id3tags
+  audiotags
   permission_handler_windows
 )
 

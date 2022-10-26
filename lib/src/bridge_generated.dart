@@ -14,15 +14,15 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:meta/meta.dart';
 import 'dart:ffi' as ffi;
 
-class Id3TagsImpl implements Id3Tags {
-  final Id3TagsPlatform _platform;
-  factory Id3TagsImpl(ExternalLibrary dylib) =>
-      Id3TagsImpl.raw(Id3TagsPlatform(dylib));
+class AudiotagsImpl implements Audiotags {
+  final AudiotagsPlatform _platform;
+  factory AudiotagsImpl(ExternalLibrary dylib) =>
+      AudiotagsImpl.raw(AudiotagsPlatform(dylib));
 
   /// Only valid on web/WASM platforms.
-  factory Id3TagsImpl.wasm(FutureOr<WasmModule> module) =>
-      Id3TagsImpl(module as ExternalLibrary);
-  Id3TagsImpl.raw(this._platform);
+  factory AudiotagsImpl.wasm(FutureOr<WasmModule> module) =>
+      AudiotagsImpl(module as ExternalLibrary);
+  AudiotagsImpl.raw(this._platform);
   Future<Tag> read({required String path, dynamic hint}) =>
       _platform.executeNormal(FlutterRustBridgeTask(
         callFfi: (port_) =>
@@ -63,12 +63,16 @@ class Id3TagsImpl implements Id3Tags {
     return raw as String;
   }
 
+  double _wire2api_box_autoadd_f64(dynamic raw) {
+    return raw as double;
+  }
+
   int _wire2api_box_autoadd_i32(dynamic raw) {
     return raw as int;
   }
 
-  int _wire2api_box_autoadd_u32(dynamic raw) {
-    return raw as int;
+  double _wire2api_f64(dynamic raw) {
+    return raw as double;
   }
 
   int _wire2api_i32(dynamic raw) {
@@ -79,12 +83,12 @@ class Id3TagsImpl implements Id3Tags {
     return raw == null ? null : _wire2api_String(raw);
   }
 
-  int? _wire2api_opt_box_autoadd_i32(dynamic raw) {
-    return raw == null ? null : _wire2api_box_autoadd_i32(raw);
+  double? _wire2api_opt_box_autoadd_f64(dynamic raw) {
+    return raw == null ? null : _wire2api_box_autoadd_f64(raw);
   }
 
-  int? _wire2api_opt_box_autoadd_u32(dynamic raw) {
-    return raw == null ? null : _wire2api_box_autoadd_u32(raw);
+  int? _wire2api_opt_box_autoadd_i32(dynamic raw) {
+    return raw == null ? null : _wire2api_box_autoadd_i32(raw);
   }
 
   Uint8List? _wire2api_opt_uint_8_list(dynamic raw) {
@@ -101,13 +105,9 @@ class Id3TagsImpl implements Id3Tags {
       album: _wire2api_opt_String(arr[2]),
       year: _wire2api_opt_box_autoadd_i32(arr[3]),
       genre: _wire2api_opt_String(arr[4]),
-      duration: _wire2api_opt_box_autoadd_u32(arr[5]),
+      duration: _wire2api_opt_box_autoadd_f64(arr[5]),
       picture: _wire2api_opt_uint_8_list(arr[6]),
     );
-  }
-
-  int _wire2api_u32(dynamic raw) {
-    return raw as int;
   }
 
   int _wire2api_u8(dynamic raw) {
@@ -126,12 +126,12 @@ class Id3TagsImpl implements Id3Tags {
 // Section: api2wire
 
 @protected
-int api2wire_i32(int raw) {
+double api2wire_f64(double raw) {
   return raw;
 }
 
 @protected
-int api2wire_u32(int raw) {
+int api2wire_i32(int raw) {
   return raw;
 }
 
@@ -140,13 +140,18 @@ int api2wire_u8(int raw) {
   return raw;
 }
 
-class Id3TagsPlatform extends FlutterRustBridgeBase<Id3TagsWire> {
-  Id3TagsPlatform(ffi.DynamicLibrary dylib) : super(Id3TagsWire(dylib));
+class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
+  AudiotagsPlatform(ffi.DynamicLibrary dylib) : super(AudiotagsWire(dylib));
 // Section: api2wire
 
   @protected
   ffi.Pointer<wire_uint_8_list> api2wire_String(String raw) {
     return api2wire_uint_8_list(utf8.encoder.convert(raw));
+  }
+
+  @protected
+  ffi.Pointer<ffi.Double> api2wire_box_autoadd_f64(double raw) {
+    return inner.new_box_autoadd_f64_0(api2wire_f64(raw));
   }
 
   @protected
@@ -162,23 +167,18 @@ class Id3TagsPlatform extends FlutterRustBridgeBase<Id3TagsWire> {
   }
 
   @protected
-  ffi.Pointer<ffi.Uint32> api2wire_box_autoadd_u32(int raw) {
-    return inner.new_box_autoadd_u32_0(api2wire_u32(raw));
-  }
-
-  @protected
   ffi.Pointer<wire_uint_8_list> api2wire_opt_String(String? raw) {
     return raw == null ? ffi.nullptr : api2wire_String(raw);
   }
 
   @protected
-  ffi.Pointer<ffi.Int32> api2wire_opt_box_autoadd_i32(int? raw) {
-    return raw == null ? ffi.nullptr : api2wire_box_autoadd_i32(raw);
+  ffi.Pointer<ffi.Double> api2wire_opt_box_autoadd_f64(double? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_f64(raw);
   }
 
   @protected
-  ffi.Pointer<ffi.Uint32> api2wire_opt_box_autoadd_u32(int? raw) {
-    return raw == null ? ffi.nullptr : api2wire_box_autoadd_u32(raw);
+  ffi.Pointer<ffi.Int32> api2wire_opt_box_autoadd_i32(int? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_i32(raw);
   }
 
   @protected
@@ -205,7 +205,7 @@ class Id3TagsPlatform extends FlutterRustBridgeBase<Id3TagsWire> {
     wireObj.album = api2wire_opt_String(apiObj.album);
     wireObj.year = api2wire_opt_box_autoadd_i32(apiObj.year);
     wireObj.genre = api2wire_opt_String(apiObj.genre);
-    wireObj.duration = api2wire_opt_box_autoadd_u32(apiObj.duration);
+    wireObj.duration = api2wire_opt_box_autoadd_f64(apiObj.duration);
     wireObj.picture = api2wire_opt_uint_8_list(apiObj.picture);
   }
 }
@@ -217,17 +217,17 @@ class Id3TagsPlatform extends FlutterRustBridgeBase<Id3TagsWire> {
 // Generated by `package:ffigen`.
 
 /// generated by flutter_rust_bridge
-class Id3TagsWire implements FlutterRustBridgeWireBase {
+class AudiotagsWire implements FlutterRustBridgeWireBase {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
       _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  Id3TagsWire(ffi.DynamicLibrary dynamicLibrary)
+  AudiotagsWire(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
-  Id3TagsWire.fromLookup(
+  AudiotagsWire.fromLookup(
       ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
           lookup)
       : _lookup = lookup;
@@ -283,6 +283,20 @@ class Id3TagsWire implements FlutterRustBridgeWireBase {
       void Function(
           int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_Tag>)>();
 
+  ffi.Pointer<ffi.Double> new_box_autoadd_f64_0(
+    double value,
+  ) {
+    return _new_box_autoadd_f64_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_f64_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Double> Function(ffi.Double)>>(
+          'new_box_autoadd_f64_0');
+  late final _new_box_autoadd_f64_0 = _new_box_autoadd_f64_0Ptr
+      .asFunction<ffi.Pointer<ffi.Double> Function(double)>();
+
   ffi.Pointer<ffi.Int32> new_box_autoadd_i32_0(
     int value,
   ) {
@@ -306,20 +320,6 @@ class Id3TagsWire implements FlutterRustBridgeWireBase {
           'new_box_autoadd_tag_0');
   late final _new_box_autoadd_tag_0 =
       _new_box_autoadd_tag_0Ptr.asFunction<ffi.Pointer<wire_Tag> Function()>();
-
-  ffi.Pointer<ffi.Uint32> new_box_autoadd_u32_0(
-    int value,
-  ) {
-    return _new_box_autoadd_u32_0(
-      value,
-    );
-  }
-
-  late final _new_box_autoadd_u32_0Ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Uint32> Function(ffi.Uint32)>>(
-          'new_box_autoadd_u32_0');
-  late final _new_box_autoadd_u32_0 = _new_box_autoadd_u32_0Ptr
-      .asFunction<ffi.Pointer<ffi.Uint32> Function(int)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,
@@ -369,7 +369,7 @@ class wire_Tag extends ffi.Struct {
 
   external ffi.Pointer<wire_uint_8_list> genre;
 
-  external ffi.Pointer<ffi.Uint32> duration;
+  external ffi.Pointer<ffi.Double> duration;
 
   external ffi.Pointer<wire_uint_8_list> picture;
 }

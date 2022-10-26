@@ -1,6 +1,6 @@
-# id3tags_example
+# audiotags_example
 
-Demonstrates how to use the id3tags plugin.
+Demonstrates how to use the audiotags plugin.
 
 ## Getting Started
 

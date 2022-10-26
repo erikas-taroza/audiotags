@@ -1,4 +1,4 @@
-group 'com.erikas.id3tags'
+group 'com.erikas.audiotags'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -38,9 +38,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-        main {
-            jniLibs.srcDirs = ['src/main/jniLibs']
-        }
+        jniLibs.srcDirs = ['src/main/jniLibs']
     }
 
     defaultConfig {

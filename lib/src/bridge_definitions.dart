@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 
-abstract class Id3Tags {
+abstract class Audiotags {
   Future<Tag> read({required String path, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kReadConstMeta;
@@ -22,7 +22,7 @@ class Tag {
   final String? album;
   final int? year;
   final String? genre;
-  final int? duration;
+  final double? duration;
   final Uint8List? picture;
 
   Tag({
