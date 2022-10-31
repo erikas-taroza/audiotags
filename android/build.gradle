@@ -38,7 +38,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-        jniLibs.srcDirs = ['src/main/jniLibs']
+        main.jniLibs.srcDirs = ['src/main/jniLibs']
     }
 
     defaultConfig {
