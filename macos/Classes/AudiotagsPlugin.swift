@@ -6,6 +6,8 @@ public class AudiotagsPlugin: NSObject, FlutterPlugin {
     let channel = FlutterMethodChannel(name: "audiotags", binaryMessenger: registrar.messenger)
     let instance = AudiotagsPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
+
+    let _ = dummy()
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -16,4 +18,7 @@ public class AudiotagsPlugin: NSObject, FlutterPlugin {
       result(FlutterMethodNotImplemented)
     }
   }
+
+  public static func dummy() -> Int64
+  { return dummy_method_to_enforce_bundling() }
 }
