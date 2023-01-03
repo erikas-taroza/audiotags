@@ -99,18 +99,9 @@ def init():
     if f'set(CRATE_NAME, "{package_name}")' not in linux_cmake_text:
         with open("./linux/CMakeLists.txt", "w") as cmake:
             split = linux_cmake_text.split(f"set({package_name}_bundled_libraries")
-            split[0] = split[0] + 'set(CRATE_NAME, "pkgname")\nset(CRATE_NAME ${CRATE_NAME} PARENT_SCOPE)\nadd_subdirectory(${CRATE_NAME})'.replace("pkgname", package_name)
-            split[1] = split[1].replace('""', r'"$<TARGET_FILE:${CRATE_NAME}>"')
+            split[1] = split[1].replace('""', r'"${CMAKE_CURRENT_SOURCE_DIR}/lib' + f'{package_name}.so"')
             linux_cmake_text = split[0] + f"\nset({package_name}_bundled_libraries" + split[1]
             cmake.write(linux_cmake_text)
-
-    if not os.path.exists(f"./linux/{package_name}/CMakeLists.txt"):
-        os.mkdir(f"./linux/{package_name}")
-        with open(f"./linux/{package_name}/CMakeLists.txt", "w") as cmake:
-            cmake.write(
-                'add_library(${CRATE_NAME} SHARED IMPORTED GLOBAL)\nset_property(TARGET ${CRATE_NAME} PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/libpkgname.so")'
-                .replace("pkgname", package_name)
-            )
 
     # Windows
     windows_cmake_text = open("./windows/CMakeLists.txt", "r").read()
@@ -118,7 +109,7 @@ def init():
         with open("./windows/CMakeLists.txt", "w") as cmake:
             split = windows_cmake_text.split(f"set({package_name}_bundled_libraries")
             split[1] = split[1].replace('""', r'"${CMAKE_CURRENT_SOURCE_DIR}/pkgname.dll"')
-            windows_cmake_text = split[0] + f"\nset({package_name}_bundled_libraries" + split[1]
+            windows_cmake_text = split[0] + f"set({package_name}_bundled_libraries" + split[1].replace("pkgname", package_name)
             cmake.write(windows_cmake_text)
 
     # macOS
@@ -128,6 +119,15 @@ def init():
             # Remove the end keyword ----------v
             mac_podspec = mac_podspec.strip()[:-3] + "  s.vendored_libraries = 'Libs/**/*'\nend"
             podspec.write(mac_podspec)
+
+    swift_text = open(f"./macos/Classes/{pascal_case_package_name}Plugin.swift", "r").read()
+    if "dummy_method" not in swift_text:
+            with open(f"./macos/Classes/{pascal_case_package_name}Plugin.swift", "w") as swift:
+                entry_point = "public static func register(with registrar: FlutterPluginRegistrar) {"
+                split = swift_text.split(entry_point)
+                split[1] = "\n\t\tlet _ = dummy_method_to_enforce_bundling()" + split[1]
+                swift_text = split[0] + entry_point + split[1]
+                swift.write(swift_text)
 
     # iOS
     ios_podspec = open(f"./ios/{package_name}.podspec", "r").read()
@@ -144,7 +144,7 @@ def init():
             with open(f"./ios/Classes/Swift{pascal_case_package_name}Plugin.swift", "w") as swift:
                 entry_point = "public static func register(with registrar: FlutterPluginRegistrar) {"
                 split = swift_text.split(entry_point)
-                split[1] = "\n\t\tprint(dummy_method_to_enforce_bundling())" + split[1]
+                split[1] = "\n\t\tlet _ = dummy_method_to_enforce_bundling()" + split[1]
                 swift_text = split[0] + entry_point + split[1]
                 swift.write(swift_text)
     # Obj-C project
@@ -218,12 +218,11 @@ def build(targets:list[str], openssl_path:str = None):
 
         os.system("rustup target add x86_64-unknown-linux-gnu")
         os.system("cargo build --release --target x86_64-unknown-linux-gnu --manifest-path ./rust/Cargo.toml")
-        os.makedirs(f"./linux/{package_name}", exist_ok=True)
 
-        if os.path.exists(f"./linux/{package_name}/lib{package_name}.so"):
-            os.remove(f"./linux/{package_name}/lib{package_name}.so")
+        if os.path.exists(f"./linux/lib{package_name}.so"):
+            os.remove(f"./linux/lib{package_name}.so")
 
-        shutil.move(f"./rust/target/x86_64-unknown-linux-gnu/release/lib{package_name}.so", f"./linux/{package_name}")
+        shutil.move(f"./rust/target/x86_64-unknown-linux-gnu/release/lib{package_name}.so", f"./linux")
 
     if is_windows and "windows" in targets:
         print("Building Windows libraries...\n")
@@ -244,12 +243,12 @@ def build(targets:list[str], openssl_path:str = None):
             os.system("rustup target add aarch64-apple-darwin x86_64-apple-darwin")
             os.system("cargo build --release --target aarch64-apple-darwin --manifest-path ./rust/Cargo.toml")
             os.system("cargo build --release --target x86_64-apple-darwin --manifest-path ./rust/Cargo.toml")
-            os.system(f'lipo "./rust/target/aarch64-apple-darwin/release/lib{package_name}.dylib" "./rust/target/x86_64-apple-darwin/release/lib{package_name}.dylib" -output "lib{package_name}.dylib" -create')
+            os.system(f'lipo "./rust/target/aarch64-apple-darwin/release/lib{package_name}.a" "./rust/target/x86_64-apple-darwin/release/lib{package_name}.a" -output "lib{package_name}.a" -create')
 
-            if os.path.exists(f"./macos/Libs/lib{package_name}.dylib"):
-                os.remove(f"./macos/Libs/lib{package_name}.dylib")
+            if os.path.exists(f"./macos/Libs/lib{package_name}.a"):
+                os.remove(f"./macos/Libs/lib{package_name}.a")
 
-            shutil.move(f"./lib{package_name}.dylib", "./macos/Libs")
+            shutil.move(f"./lib{package_name}.a", "./macos/Libs")
 
         if "ios" in targets:
             # Build for iOS
