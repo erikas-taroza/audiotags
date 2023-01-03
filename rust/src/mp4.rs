@@ -1,14 +1,15 @@
+use anyhow::anyhow;
 use mp4ameta::{self, Img};
 
-use crate::api::{Tag, Error};
+use crate::api::Tag;
 
-pub fn read(path:&String) -> Result<Tag, Error>
+pub fn read(path:&String) -> anyhow::Result<Tag>
 {
     let mp4tag = mp4ameta::Tag::read_from_path(path);
 
     match mp4tag
     {
-        Err(err) => Err(Error(format!("{err}"))),
+        Err(err) => Err(anyhow!(format!("ERR: {err}"))),
         Ok(mp4tag) => {
             let picture = mp4tag.artwork();
 
@@ -31,13 +32,13 @@ pub fn read(path:&String) -> Result<Tag, Error>
     }
 }
 
-pub fn write(path:&String, data:Tag) -> Result<(), Error>
+pub fn write(path:&String, data:Tag) -> anyhow::Result<()>
 {
     let mp4tag = mp4ameta::Tag::read_from_path(path);
 
     let mut mp4tag = match mp4tag
     {
-        Err(err) => return Err(Error(format!("{err}"))),
+        Err(err) => return Err(anyhow!(format!("ERR: {err}"))),
         Ok(mp4tag) => mp4tag
     };
 
@@ -68,7 +69,7 @@ pub fn write(path:&String, data:Tag) -> Result<(), Error>
     let result = mp4tag.write_to_path(path);
     match result
     {
-        Err(err) => Err(Error(format!("{err}"))),
-        Ok(()) => return Ok(())
+        Err(err) => Err(anyhow!(format!("ERR: {err}"))),
+        Ok(_) => return Ok(())
     }
 }

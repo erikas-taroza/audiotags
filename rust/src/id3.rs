@@ -1,17 +1,18 @@
+use anyhow::anyhow;
 use id3::{
     frame::{Picture, PictureType},
     Content, Frame, Tag as id3Tag, TagLike
 };
 
-use crate::api::{Tag, Error};
+use crate::api::Tag;
 
-pub fn read(path:&String) -> Result<Tag, Error>
+pub fn read(path:&String) -> anyhow::Result<Tag>
 {
     let id3tag = id3Tag::read_from_path(path);
 
     match id3tag
     {
-        Err(err) => Err(Error(format!("{err}"))),
+        Err(err) => Err(anyhow!(format!("ERR: {err}"))),
         Ok(id3tag) => {
             let pictures = id3tag.pictures().collect::<Vec<_>>();
             
@@ -34,7 +35,7 @@ pub fn read(path:&String) -> Result<Tag, Error>
     }
 }
 
-pub fn write(path:&String, data:Tag) -> Result<(), Error>
+pub fn write(path:&String, data:Tag) -> anyhow::Result<()>
 {
     let mut id3tag = id3Tag::new();
 
@@ -73,7 +74,7 @@ pub fn write(path:&String, data:Tag) -> Result<(), Error>
     let result = id3tag.write_to_path(path, id3::Version::Id3v24);
     match result
     {
-        Err(err) => Err(Error(format!("{err}"))),
+        Err(err) => Err(anyhow!(format!("ERR: {err}"))),
         Ok(()) => return Ok(())
     }
 }

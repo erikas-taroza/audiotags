@@ -1,15 +1,6 @@
+use anyhow::anyhow;
+
 use crate::{id3, mp4};
-
-#[derive(Debug)]
-pub struct Error(pub String);
-
-impl std::fmt::Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "ERR (audiotags): {}", self.0)
-    }
-}
-
-impl std::error::Error for Error {}
 
 #[derive(Default)]
 pub struct Tag
@@ -23,7 +14,7 @@ pub struct Tag
     pub picture: Option<Vec<u8>>,
 }
 
-pub fn read(path: String) -> Result<Tag, Error>
+pub fn read(path: String) -> anyhow::Result<Tag>
 {
     let extension = path.split(".").last().unwrap();
 
@@ -36,11 +27,11 @@ pub fn read(path: String) -> Result<Tag, Error>
         | "m4b"
         | "m4r"
         | "m4v" => mp4::read(&path),
-        _ => Err(Error("Unsupported file type for reading.".to_string()))
+        _ => Err(anyhow!("ERR: Unsupported file type for reading.".to_string()))
     }
 }
 
-pub fn write(path:String, data:Tag) -> Result<(), Error>
+pub fn write(path:String, data:Tag) -> anyhow::Result<()>
 {
     let extension = path.split(".").last().unwrap();
 
@@ -53,7 +44,7 @@ pub fn write(path:String, data:Tag) -> Result<(), Error>
         | "m4b"
         | "m4r"
         | "m4v" => mp4::write(&path, data),
-        _ => Err(Error("Unsupported file type for writing.".to_string()))
+        _ => Err(anyhow!("ERR: Unsupported file type for writing.".to_string()))
     }
 }
 
@@ -65,7 +56,7 @@ mod tests {
 
     #[test]
     fn read_tag() {
-        let tag = read("/home/erikas/Music/BitBeat/test.mp4".to_string()).expect("Could not read tag.");
+        let tag = read("/home/erikas/Music/1.mp3".to_string()).expect("Could not read tag.");
 
         println!("{:?}", tag.title);
         println!("{:?}", tag.artist);
@@ -79,7 +70,7 @@ mod tests {
     #[test]
     fn write_tag() {
         let _tag = write(
-            "/home/erikas/Music/BitBeat/test.mp4".to_string(),
+            "/home/erikas/Music/1.mp3".to_string(),
             Tag {
                 title: Some("Title".to_string()),
                 artist: Some("Artist".to_string()),

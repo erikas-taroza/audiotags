@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +20,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp>
 {
-    //TODO: Enter the path 
-    // to the mp3 file here ----v
-    String path = "/path/to/song.mp3";
+    String path = "";
 
     @override
     void initState()
@@ -32,12 +32,21 @@ class _MyAppState extends State<MyApp>
         return MaterialApp(
             home: Scaffold(
                 appBar: AppBar(
-                    title: const Text('Plugin example app'),
+                    title: const Text('Audiotags Example'),
                 ),
                 body: Center(
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                            ElevatedButton(
+                                child: const Text("Open"),
+                                onPressed: () async {
+                                    if(Platform.isAndroid || Platform.isIOS) await Permission.storage.request();
+                                    FilePickerResult? r = await FilePicker.platform.pickFiles();
+                                    if(r != null) path = r.files.single.path!;
+                                },
+                            ),
+                            const SizedBox(height: 10),
                             ElevatedButton(
                                 child: const Text("Write"),
                                 onPressed: () => AudioTags.write(path, Tag(
@@ -56,19 +65,6 @@ class _MyAppState extends State<MyApp>
                                     debugPrint(tag.picture.toString());
                                 },
                             ),
-                            //TODO: You will need to setup permissions for mobile:
-                            
-                            // const SizedBox(height: 10),
-                            // ElevatedButton(
-                            //     child: const Text("Perms"),
-                            //     onPressed: () async {
-                            //         var result = await Permission.storage.request();
-                            //         debugPrint(result.toString());
-                            //         // Testing QOL
-                            //         FilePickerResult? r = await FilePicker.platform.pickFiles();
-                            //         if(r != null) path = r.files.single.path!;
-                            //     },
-                            // ),
                         ],
                     )
                 ),
