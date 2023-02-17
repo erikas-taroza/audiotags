@@ -1,6 +1,8 @@
 use anyhow::anyhow;
 use lofty::{Accessor, Probe, TaggedFileExt, ItemKey, AudioFile, TaggedFile, Picture, TagExt};
 
+use crate::mp4;
+
 #[derive(Default)]
 pub struct Tag
 {
@@ -43,6 +45,17 @@ fn get_file(path: String) -> anyhow::Result<TaggedFile>
 
 pub fn read(path: String) -> anyhow::Result<Tag>
 {
+    match path.split(".").last().unwrap()
+    {
+        "mp4"
+        | "m4a"
+        | "m4p"
+        | "m4b"
+        | "m4r"
+        | "m4v" => return mp4::read(&path),
+        _ => ()
+    };
+
     let file = get_file(path)?;
 
     let tag = match file.primary_tag() {
@@ -75,12 +88,21 @@ pub fn read(path: String) -> anyhow::Result<Tag>
 
 pub fn write(path: String, data: Tag) -> anyhow::Result<()>
 {
+    match path.split(".").last().unwrap()
+    {
+        "mp4"
+        | "m4a"
+        | "m4p"
+        | "m4b"
+        | "m4r"
+        | "m4v" => return mp4::write(&path, data),
+        _ => ()
+    };
+
     let mut file = get_file(path.clone())?;
 
     // Remove the existing tag.
-    if let Some(_) = file.primary_tag_mut() {
-        file.remove(file.primary_tag_type());
-    }
+    file.clear();
 
     // If there is no data to be written, then return.
     if data.is_empty() { return Ok(()); }
