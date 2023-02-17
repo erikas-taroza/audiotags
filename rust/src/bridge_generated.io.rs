@@ -14,18 +14,13 @@ pub extern "C" fn wire_write(port_: i64, path: *mut wire_uint_8_list, data: *mut
 // Section: allocate functions
 
 #[no_mangle]
-pub extern "C" fn new_box_autoadd_f64_0(value: f64) -> *mut f64 {
-    support::new_leak_box_ptr(value)
-}
-
-#[no_mangle]
-pub extern "C" fn new_box_autoadd_i32_0(value: i32) -> *mut i32 {
-    support::new_leak_box_ptr(value)
-}
-
-#[no_mangle]
 pub extern "C" fn new_box_autoadd_tag_0() -> *mut wire_Tag {
     support::new_leak_box_ptr(wire_Tag::new_with_null_ptr())
+}
+
+#[no_mangle]
+pub extern "C" fn new_box_autoadd_u32_0(value: u32) -> *mut u32 {
+    support::new_leak_box_ptr(value)
 }
 
 #[no_mangle]
@@ -47,7 +42,6 @@ impl Wire2Api<String> for *mut wire_uint_8_list {
         String::from_utf8_lossy(&vec).into_owned()
     }
 }
-
 impl Wire2Api<Tag> for *mut wire_Tag {
     fn wire2api(self) -> Tag {
         let wrap = unsafe { support::box_from_leak_ptr(self) };
@@ -85,9 +79,9 @@ pub struct wire_Tag {
     title: *mut wire_uint_8_list,
     artist: *mut wire_uint_8_list,
     album: *mut wire_uint_8_list,
-    year: *mut i32,
+    year: *mut u32,
     genre: *mut wire_uint_8_list,
-    duration: *mut f64,
+    duration: *mut u32,
     picture: *mut wire_uint_8_list,
 }
 

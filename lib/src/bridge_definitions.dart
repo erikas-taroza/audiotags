@@ -22,7 +22,7 @@ class Tag {
   final String? album;
   final int? year;
   final String? genre;
-  final double? duration;
+  final int? duration;
   final Uint8List? picture;
 
   Tag({

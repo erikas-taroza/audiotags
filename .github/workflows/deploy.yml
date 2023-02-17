@@ -1,9 +1,9 @@
 name: Build & Deploy Rust Libraries
 
 on:
-  push:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
   workflow_dispatch:
       
 jobs:
@@ -14,11 +14,6 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-
-      - name: Install Rust -sys dependencies
-        run: |
-          sudo apt install libasound2-dev
-          sudo apt install libdbus-1-dev pkg-config
           
       - name: Cache Rust Build
         uses: Swatinem/rust-cache@v2

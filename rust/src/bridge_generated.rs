@@ -75,28 +75,17 @@ where
     }
 }
 
-impl Wire2Api<f64> for *mut f64 {
-    fn wire2api(self) -> f64 {
-        unsafe { *support::box_from_leak_ptr(self) }
-    }
-}
-impl Wire2Api<i32> for *mut i32 {
-    fn wire2api(self) -> i32 {
+impl Wire2Api<u32> for *mut u32 {
+    fn wire2api(self) -> u32 {
         unsafe { *support::box_from_leak_ptr(self) }
     }
 }
 
-impl Wire2Api<f64> for f64 {
-    fn wire2api(self) -> f64 {
+impl Wire2Api<u32> for u32 {
+    fn wire2api(self) -> u32 {
         self
     }
 }
-impl Wire2Api<i32> for i32 {
-    fn wire2api(self) -> i32 {
-        self
-    }
-}
-
 impl Wire2Api<u8> for u8 {
     fn wire2api(self) -> u8 {
         self

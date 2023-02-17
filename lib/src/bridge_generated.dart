@@ -67,19 +67,7 @@ class AudiotagsImpl implements Audiotags {
     return raw as String;
   }
 
-  double _wire2api_box_autoadd_f64(dynamic raw) {
-    return raw as double;
-  }
-
-  int _wire2api_box_autoadd_i32(dynamic raw) {
-    return raw as int;
-  }
-
-  double _wire2api_f64(dynamic raw) {
-    return raw as double;
-  }
-
-  int _wire2api_i32(dynamic raw) {
+  int _wire2api_box_autoadd_u32(dynamic raw) {
     return raw as int;
   }
 
@@ -87,12 +75,8 @@ class AudiotagsImpl implements Audiotags {
     return raw == null ? null : _wire2api_String(raw);
   }
 
-  double? _wire2api_opt_box_autoadd_f64(dynamic raw) {
-    return raw == null ? null : _wire2api_box_autoadd_f64(raw);
-  }
-
-  int? _wire2api_opt_box_autoadd_i32(dynamic raw) {
-    return raw == null ? null : _wire2api_box_autoadd_i32(raw);
+  int? _wire2api_opt_box_autoadd_u32(dynamic raw) {
+    return raw == null ? null : _wire2api_box_autoadd_u32(raw);
   }
 
   Uint8List? _wire2api_opt_uint_8_list(dynamic raw) {
@@ -107,11 +91,15 @@ class AudiotagsImpl implements Audiotags {
       title: _wire2api_opt_String(arr[0]),
       artist: _wire2api_opt_String(arr[1]),
       album: _wire2api_opt_String(arr[2]),
-      year: _wire2api_opt_box_autoadd_i32(arr[3]),
+      year: _wire2api_opt_box_autoadd_u32(arr[3]),
       genre: _wire2api_opt_String(arr[4]),
-      duration: _wire2api_opt_box_autoadd_f64(arr[5]),
+      duration: _wire2api_opt_box_autoadd_u32(arr[5]),
       picture: _wire2api_opt_uint_8_list(arr[6]),
     );
+  }
+
+  int _wire2api_u32(dynamic raw) {
+    return raw as int;
   }
 
   int _wire2api_u8(dynamic raw) {
@@ -130,12 +118,7 @@ class AudiotagsImpl implements Audiotags {
 // Section: api2wire
 
 @protected
-double api2wire_f64(double raw) {
-  return raw;
-}
-
-@protected
-int api2wire_i32(int raw) {
+int api2wire_u32(int raw) {
   return raw;
 }
 
@@ -157,20 +140,15 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
   }
 
   @protected
-  ffi.Pointer<ffi.Double> api2wire_box_autoadd_f64(double raw) {
-    return inner.new_box_autoadd_f64_0(api2wire_f64(raw));
-  }
-
-  @protected
-  ffi.Pointer<ffi.Int32> api2wire_box_autoadd_i32(int raw) {
-    return inner.new_box_autoadd_i32_0(api2wire_i32(raw));
-  }
-
-  @protected
   ffi.Pointer<wire_Tag> api2wire_box_autoadd_tag(Tag raw) {
     final ptr = inner.new_box_autoadd_tag_0();
     _api_fill_to_wire_tag(raw, ptr.ref);
     return ptr;
+  }
+
+  @protected
+  ffi.Pointer<ffi.Uint32> api2wire_box_autoadd_u32(int raw) {
+    return inner.new_box_autoadd_u32_0(api2wire_u32(raw));
   }
 
   @protected
@@ -179,13 +157,8 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
   }
 
   @protected
-  ffi.Pointer<ffi.Double> api2wire_opt_box_autoadd_f64(double? raw) {
-    return raw == null ? ffi.nullptr : api2wire_box_autoadd_f64(raw);
-  }
-
-  @protected
-  ffi.Pointer<ffi.Int32> api2wire_opt_box_autoadd_i32(int? raw) {
-    return raw == null ? ffi.nullptr : api2wire_box_autoadd_i32(raw);
+  ffi.Pointer<ffi.Uint32> api2wire_opt_box_autoadd_u32(int? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_u32(raw);
   }
 
   @protected
@@ -212,9 +185,9 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
     wireObj.title = api2wire_opt_String(apiObj.title);
     wireObj.artist = api2wire_opt_String(apiObj.artist);
     wireObj.album = api2wire_opt_String(apiObj.album);
-    wireObj.year = api2wire_opt_box_autoadd_i32(apiObj.year);
+    wireObj.year = api2wire_opt_box_autoadd_u32(apiObj.year);
     wireObj.genre = api2wire_opt_String(apiObj.genre);
-    wireObj.duration = api2wire_opt_box_autoadd_f64(apiObj.duration);
+    wireObj.duration = api2wire_opt_box_autoadd_u32(apiObj.duration);
     wireObj.picture = api2wire_opt_uint_8_list(apiObj.picture);
   }
 }
@@ -351,34 +324,6 @@ class AudiotagsWire implements FlutterRustBridgeWireBase {
       void Function(
           int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_Tag>)>();
 
-  ffi.Pointer<ffi.Double> new_box_autoadd_f64_0(
-    double value,
-  ) {
-    return _new_box_autoadd_f64_0(
-      value,
-    );
-  }
-
-  late final _new_box_autoadd_f64_0Ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Double> Function(ffi.Double)>>(
-          'new_box_autoadd_f64_0');
-  late final _new_box_autoadd_f64_0 = _new_box_autoadd_f64_0Ptr
-      .asFunction<ffi.Pointer<ffi.Double> Function(double)>();
-
-  ffi.Pointer<ffi.Int32> new_box_autoadd_i32_0(
-    int value,
-  ) {
-    return _new_box_autoadd_i32_0(
-      value,
-    );
-  }
-
-  late final _new_box_autoadd_i32_0Ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int32> Function(ffi.Int32)>>(
-          'new_box_autoadd_i32_0');
-  late final _new_box_autoadd_i32_0 = _new_box_autoadd_i32_0Ptr
-      .asFunction<ffi.Pointer<ffi.Int32> Function(int)>();
-
   ffi.Pointer<wire_Tag> new_box_autoadd_tag_0() {
     return _new_box_autoadd_tag_0();
   }
@@ -388,6 +333,20 @@ class AudiotagsWire implements FlutterRustBridgeWireBase {
           'new_box_autoadd_tag_0');
   late final _new_box_autoadd_tag_0 =
       _new_box_autoadd_tag_0Ptr.asFunction<ffi.Pointer<wire_Tag> Function()>();
+
+  ffi.Pointer<ffi.Uint32> new_box_autoadd_u32_0(
+    int value,
+  ) {
+    return _new_box_autoadd_u32_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_u32_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Uint32> Function(ffi.Uint32)>>(
+          'new_box_autoadd_u32_0');
+  late final _new_box_autoadd_u32_0 = _new_box_autoadd_u32_0Ptr
+      .asFunction<ffi.Pointer<ffi.Uint32> Function(int)>();
 
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,
@@ -435,11 +394,11 @@ class wire_Tag extends ffi.Struct {
 
   external ffi.Pointer<wire_uint_8_list> album;
 
-  external ffi.Pointer<ffi.Int32> year;
+  external ffi.Pointer<ffi.Uint32> year;
 
   external ffi.Pointer<wire_uint_8_list> genre;
 
-  external ffi.Pointer<ffi.Double> duration;
+  external ffi.Pointer<ffi.Uint32> duration;
 
   external ffi.Pointer<wire_uint_8_list> picture;
 }
