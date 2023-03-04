@@ -1,7 +1,17 @@
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint audiotags.podspec` to validate before publishing.
-#
+# Download the binary from GitHub.
+version = "1.0.0"
+lib_url = "https://github.com/erikas-taroza/audiotags/blob/v#{version}/macos/Libs/libaudiotags.a?raw=true"
+
+`
+mkdir Libs
+cd Libs
+if [ ! -f libaudiotags.a ]
+then
+  curl -L "#{lib_url}" -o libaudiotags.a
+fi
+cd ..
+`
+
 Pod::Spec.new do |s|
   s.name             = 'audiotags'
   s.version          = '0.0.1'

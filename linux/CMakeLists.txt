@@ -38,6 +38,17 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
+# Download the binary from GitHub.
+set(Version "1.0.0")
+set(LibPath "${CMAKE_CURRENT_SOURCE_DIR}/libaudiotags.so")
+if(NOT EXISTS ${LibPath})
+  file(DOWNLOAD
+    "https://github.com/erikas-taroza/audiotags/blob/v${Version}/linux/libv.so?raw=true"
+    ${LibPath}
+    TLS_VERIFY ON
+  )
+endif()
+
 # List of absolute paths to libraries that should be bundled with the plugin.
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.

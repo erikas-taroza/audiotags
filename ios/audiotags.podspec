@@ -1,7 +1,23 @@
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint audiotags.podspec` to validate before publishing.
-#
+# Download the binaries from GitHub.
+version = "1.0.0"
+lib_url = "https://github.com/erikas-taroza/audiotags/blob/v#{version}/ios/Frameworks/audiotags.xcframework"
+
+`
+mkdir Frameworks
+cd Frameworks
+if [ ! -d audiotags.xcframework ]
+then
+  mkdir audiotags.xcframework
+  cd audiotags.xcframework
+  mkdir ios-arm64
+  mkdir ios-arm64_x86_64-simulator
+  curl -L "#{lib_url}/Info.plist?raw=true" -o Info.plist
+  curl -L "#{lib_url}/ios-arm64/libaudiotags.a?raw=true" -o ios-arm64/libaudiotags.a
+  curl -L "#{lib_url}/ios-arm64_x86_64-simulator/libaudiotags.a?raw=true" -o ios-arm64_x86_64-simulator/libaudiotags.a
+fi
+cd ../..
+`
+
 Pod::Spec.new do |s|
   s.name             = 'audiotags'
   s.version          = '0.0.1'
