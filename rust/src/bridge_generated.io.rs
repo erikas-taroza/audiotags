@@ -48,6 +48,11 @@ impl Wire2Api<Tag> for *mut wire_Tag {
         Wire2Api::<Tag>::wire2api(*wrap).into()
     }
 }
+impl Wire2Api<u32> for *mut u32 {
+    fn wire2api(self) -> u32 {
+        unsafe { *support::box_from_leak_ptr(self) }
+    }
+}
 
 impl Wire2Api<Tag> for wire_Tag {
     fn wire2api(self) -> Tag {
