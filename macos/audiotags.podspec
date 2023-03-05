@@ -1,5 +1,5 @@
 # Download the binary from GitHub.
-version = "1.0.0"
+version = "1.0.1"
 lib_url = "https://github.com/erikas-taroza/audiotags/blob/v#{version}/macos/Libs/libaudiotags.a?raw=true"
 
 `

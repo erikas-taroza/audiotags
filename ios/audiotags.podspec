@@ -1,5 +1,5 @@
 # Download the binaries from GitHub.
-version = "1.0.0"
+version = "1.0.1"
 lib_url = "https://github.com/erikas-taroza/audiotags/blob/v#{version}/ios/Frameworks/audiotags.xcframework"
 
 `
