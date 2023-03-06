@@ -1,12 +1,22 @@
+import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
+
 import './ffi.dart';
 
 class AudioTags
 {
     /// Read the metadata at the given path. Returns
-    /// a [Tag].
-    static Future<Tag> read(String path) async
+    /// a [Tag] or null if there is no metadata.
+    static Future<Tag?> read(String path) async
     {
-        return await api.read(path: path);
+        try {
+            return await api.read(path: path);
+        }
+        on FfiException catch (err) {
+            // If there is an error because there is no tag,
+            // then return null. Other errors will be thrown.
+            if(err.message == "ERR: This file does not have any tags.") return null;
+            rethrow;
+        }
     }
 
     /// Write the metadata at the given path. Previous metadata will
