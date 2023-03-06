@@ -75,13 +75,13 @@ class _MyAppState extends State<MyApp>
                                     int? duration = tag?.duration;
                                     List<int>? pictureBytes = tag?.picture;
 
-                                    debugPrint(title);
-                                    debugPrint(artist);
-                                    debugPrint(album);
-                                    debugPrint(genre);
-                                    debugPrint(year.toString());
-                                    debugPrint(duration.toString());
-                                    debugPrint(pictureBytes?.sublist(0, min(pictureBytes.length, 10)).toString());
+                                    debugPrint("Title: $title");
+                                    debugPrint("Artist: $artist");
+                                    debugPrint("Album: $album");
+                                    debugPrint("Genre: $genre");
+                                    debugPrint("Year: ${year.toString()}");
+                                    debugPrint("Duration: ${duration.toString()}");
+                                    debugPrint("# Picture Bytes: ${pictureBytes?.length.toString()}");
                                 },
                             ),
                         ],
