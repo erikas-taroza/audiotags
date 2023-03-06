@@ -66,14 +66,14 @@ class _MyAppState extends State<MyApp>
                             ElevatedButton(
                                 child: const Text("Read"),
                                 onPressed: () async {
-                                    Tag tag = await AudioTags.read(path);
-                                    String? title = tag.title;
-                                    String? artist = tag.artist;
-                                    String? album = tag.album;
-                                    String? genre = tag.genre;
-                                    int? year = tag.year;
-                                    int? duration = tag.duration;
-                                    List<int>? pictureBytes = tag.picture;
+                                    Tag? tag = await AudioTags.read(path);
+                                    String? title = tag?.title;
+                                    String? artist = tag?.artist;
+                                    String? album = tag?.album;
+                                    String? genre = tag?.genre;
+                                    int? year = tag?.year;
+                                    int? duration = tag?.duration;
+                                    List<int>? pictureBytes = tag?.picture;
 
                                     debugPrint(title);
                                     debugPrint(artist);

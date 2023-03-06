@@ -3,13 +3,16 @@ use mp4ameta::{self, Img};
 
 use crate::Tag;
 
-pub fn read(path:&String) -> anyhow::Result<Tag>
+pub fn read(path: &String) -> anyhow::Result<Tag>
 {
     let mp4tag = mp4ameta::Tag::read_from_path(path);
 
     match mp4tag
     {
-        Err(err) => Err(anyhow!(format!("ERR: {err}"))),
+        Err(err) => match err.kind {
+            mp4ameta::ErrorKind::NoTag => Err(anyhow!("ERR: This file does not have any tags.")),
+            _ => Err(anyhow!(format!("ERR: {err}")))
+        },
         Ok(mp4tag) => {
             let picture = mp4tag.artwork();
 
@@ -32,7 +35,7 @@ pub fn read(path:&String) -> anyhow::Result<Tag>
     }
 }
 
-pub fn write(path:&String, data:Tag) -> anyhow::Result<()>
+pub fn write(path: &String, data: Tag) -> anyhow::Result<()>
 {
     let mp4tag = mp4ameta::Tag::read_from_path(path);
 

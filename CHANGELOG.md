@@ -1,3 +1,6 @@
+## 1.0.3
+- Return null if the file does not have a tag.
+
 ## 1.0.2
 - CI builds on older Ubuntu version to support older `glibc` versions.
 
