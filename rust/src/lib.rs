@@ -1,50 +1,15 @@
 mod bridge_generated; /* AUTO INJECTED BY flutter_rust_bridge. This line may not be accurate, and you can change it according to your needs. */
 mod mp4;
+mod picture;
+mod tag;
 
 use anyhow::anyhow;
-use lofty::{Accessor, Probe, TaggedFileExt, ItemKey, AudioFile, TaggedFile, Picture, TagExt};
-
-/// Represents the metadata of the file.
-#[derive(Default)]
-pub struct Tag
-{
-    /// The title of the song.
-    pub title: Option<String>,
-    /// The artist of the song.
-    pub artist: Option<String>,
-    /// The album the song is from.
-    pub album: Option<String>,
-    /// The year that this song was made.
-    pub year: Option<u32>,
-    /// The genre of the song.
-    pub genre: Option<String>,
-    /// The duration of the song. Setting this field
-    /// when writing will do nothing.
-    pub duration: Option<u32>,
-    /// The front cover of the song in bytes.
-    pub picture: Option<Vec<u8>>,
-}
-
-impl Tag
-{
-    /// Returns `true` if the tag has no data.
-    fn is_empty(&self) -> bool
-    {
-        self.title == None
-            && self.artist == None
-            && self.album == None
-            && self.year == None
-            && self.genre == None
-            && self.duration == None
-            && self.picture == None
-    }
-}
+use lofty::{Accessor, AudioFile, ItemKey, Probe, TagExt, TaggedFile, TaggedFileExt};
+use tag::Tag;
 
 /// Returns a `TaggedFile` at the given path.
-fn get_file(path: String) -> anyhow::Result<TaggedFile>
-{
-    match Probe::open(path)
-    {
+fn get_file(path: String) -> anyhow::Result<TaggedFile> {
+    match Probe::open(path) {
         Ok(file) => match file.read() {
             Ok(file) => Ok(file),
             Err(_) => Err(anyhow!("ERR: Failed to read metadata of file.")),
@@ -53,17 +18,10 @@ fn get_file(path: String) -> anyhow::Result<TaggedFile>
     }
 }
 
-pub fn read(path: String) -> anyhow::Result<Tag>
-{
-    match path.split(".").last().unwrap()
-    {
-        "mp4"
-        | "m4a"
-        | "m4p"
-        | "m4b"
-        | "m4r"
-        | "m4v" => return mp4::read(&path),
-        _ => ()
+pub fn read(path: String) -> anyhow::Result<Tag> {
+    match path.split('.').last().unwrap() {
+        "mp4" | "m4a" | "m4p" | "m4b" | "m4r" | "m4v" => return mp4::read(&path),
+        _ => (),
     };
 
     let file = get_file(path)?;
@@ -72,41 +30,39 @@ pub fn read(path: String) -> anyhow::Result<Tag>
         Some(primary_tag) => Ok(primary_tag),
         None => match file.first_tag() {
             Some(first_tag) => Ok(first_tag),
-            None => Err(anyhow!("ERR: This file does not have any tags.")) 
+            None => Err(anyhow!("ERR: This file does not have any tags.")),
         },
     }?;
 
     let duration = file.properties().duration().as_secs() as u32;
 
-    let picture = match tag.get_picture_type(lofty::PictureType::CoverFront)
-    {
-        Some(picture) => Some(picture.data().to_vec()),
-        None => None,
-    };
+    let pictures = tag
+        .pictures()
+        .iter()
+        .map(|picture| {
+            picture::Picture::new(
+                picture.pic_type().into(),
+                picture.mime_type().clone().into(),
+                picture.data().to_vec(),
+            )
+        })
+        .collect::<Vec<picture::Picture>>();
 
-    Ok(Tag
-    {
+    Ok(Tag {
         title: tag.get_string(&ItemKey::TrackTitle).map(|e| e.to_string()),
         artist: tag.get_string(&ItemKey::TrackArtist).map(|e| e.to_string()),
         album: tag.get_string(&ItemKey::AlbumTitle).map(|e| e.to_string()),
         year: tag.year(),
         genre: tag.get_string(&ItemKey::Genre).map(|e| e.to_string()),
         duration: Some(duration),
-        picture
+        pictures,
     })
 }
 
-pub fn write(path: String, data: Tag) -> anyhow::Result<()>
-{
-    match path.split(".").last().unwrap()
-    {
-        "mp4"
-        | "m4a"
-        | "m4p"
-        | "m4b"
-        | "m4r"
-        | "m4v" => return mp4::write(&path, data),
-        _ => ()
+pub fn write(path: String, data: Tag) -> anyhow::Result<()> {
+    match path.split('.').last().unwrap() {
+        "mp4" | "m4a" | "m4p" | "m4b" | "m4r" | "m4v" => return mp4::write(&path, data),
+        _ => (),
     };
 
     let mut file = get_file(path.clone())?;
@@ -115,7 +71,9 @@ pub fn write(path: String, data: Tag) -> anyhow::Result<()>
     file.clear();
 
     // If there is no data to be written, then return.
-    if data.is_empty() { return Ok(()); }
+    if data.is_empty() {
+        return Ok(());
+    }
 
     // Create a new tag.
     file.insert_tag(lofty::Tag::new(file.primary_tag_type()));
@@ -146,21 +104,20 @@ pub fn write(path: String, data: Tag) -> anyhow::Result<()>
         tag.insert_text(ItemKey::Genre, genre);
     }
 
-    // Picture
-    if let Some(picture) = data.picture {
+    // Pictures
+    for (i, picture) in data.pictures.into_iter().enumerate() {
         tag.set_picture(
-            0,
-            Picture::new_unchecked(
-                lofty::PictureType::CoverFront,
-                lofty::MimeType::Jpeg,
+            i,
+            lofty::Picture::new_unchecked(
+                picture.picture_type.into(),
+                picture.mime_type.into(),
                 None,
-                picture
-            )
+                picture.bytes,
+            ),
         );
     }
 
-    match tag.save_to_path(path)
-    {
+    match tag.save_to_path(path) {
         Ok(_) => Ok(()),
         Err(_) => Err(anyhow!("ERR: Failed to write tag to file.")),
     }
@@ -172,7 +129,7 @@ mod tests {
 
     #[test]
     fn read_tag() {
-        let tag = read("/home/erikas/Music/1.mp3".to_string()).expect("Could not read tag.");
+        let tag = read("/home/erikas/Downloads/test.mp3".to_string()).expect("Could not read tag.");
 
         println!("{:?}", tag.title);
         println!("{:?}", tag.artist);
@@ -180,7 +137,7 @@ mod tests {
         println!("{:?}", tag.year);
         println!("{:?}", tag.genre);
         println!("{:?}", tag.duration);
-        println!("{:?}", tag.picture);
+        println!("{:?}", tag.pictures);
     }
 
     #[test]
@@ -193,7 +150,7 @@ mod tests {
                 album: Some("Album".to_string()),
                 year: Some(2022),
                 genre: Some("Genre".to_string()),
-                picture: Some(vec![255]),
+                // pictures: Some(vec![255]),
                 ..Default::default()
             },
         )

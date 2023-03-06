@@ -14,6 +14,17 @@ typedef struct wire_uint_8_list {
   int32_t len;
 } wire_uint_8_list;
 
+typedef struct wire_Picture {
+  int32_t picture_type;
+  int32_t mime_type;
+  struct wire_uint_8_list *bytes;
+} wire_Picture;
+
+typedef struct wire_list_picture {
+  struct wire_Picture *ptr;
+  int32_t len;
+} wire_list_picture;
+
 typedef struct wire_Tag {
   struct wire_uint_8_list *title;
   struct wire_uint_8_list *artist;
@@ -21,7 +32,7 @@ typedef struct wire_Tag {
   uint32_t *year;
   struct wire_uint_8_list *genre;
   uint32_t *duration;
-  struct wire_uint_8_list *picture;
+  struct wire_list_picture *pictures;
 } wire_Tag;
 
 typedef struct DartCObject *WireSyncReturn;
@@ -44,6 +55,8 @@ struct wire_Tag *new_box_autoadd_tag_0(void);
 
 uint32_t *new_box_autoadd_u32_0(uint32_t value);
 
+struct wire_list_picture *new_list_picture_0(int32_t len);
+
 struct wire_uint_8_list *new_uint_8_list_0(int32_t len);
 
 void free_WireSyncReturn(WireSyncReturn ptr);
@@ -54,6 +67,7 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_write);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_tag_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_u32_0);
+    dummy_var ^= ((int64_t) (void*) new_list_picture_0);
     dummy_var ^= ((int64_t) (void*) new_uint_8_list_0);
     dummy_var ^= ((int64_t) (void*) free_WireSyncReturn);
     dummy_var ^= ((int64_t) (void*) store_dart_post_cobject);

@@ -19,7 +19,10 @@ use std::sync::Arc;
 
 // Section: imports
 
-use crate::Tag;
+use crate::picture::MimeType;
+use crate::picture::Picture;
+use crate::picture::PictureType;
+use crate::tag::Tag;
 
 // Section: wire functions
 
@@ -77,6 +80,55 @@ where
     }
 }
 
+impl Wire2Api<i32> for i32 {
+    fn wire2api(self) -> i32 {
+        self
+    }
+}
+
+impl Wire2Api<MimeType> for i32 {
+    fn wire2api(self) -> MimeType {
+        match self {
+            0 => MimeType::Png,
+            1 => MimeType::Jpeg,
+            2 => MimeType::Tiff,
+            3 => MimeType::Bmp,
+            4 => MimeType::Gif,
+            5 => MimeType::None,
+            _ => unreachable!("Invalid variant for MimeType: {}", self),
+        }
+    }
+}
+
+impl Wire2Api<PictureType> for i32 {
+    fn wire2api(self) -> PictureType {
+        match self {
+            0 => PictureType::Other,
+            1 => PictureType::Icon,
+            2 => PictureType::OtherIcon,
+            3 => PictureType::CoverFront,
+            4 => PictureType::CoverBack,
+            5 => PictureType::Leaflet,
+            6 => PictureType::Media,
+            7 => PictureType::LeadArtist,
+            8 => PictureType::Artist,
+            9 => PictureType::Conductor,
+            10 => PictureType::Band,
+            11 => PictureType::Composer,
+            12 => PictureType::Lyricist,
+            13 => PictureType::RecordingLocation,
+            14 => PictureType::DuringRecording,
+            15 => PictureType::DuringPerformance,
+            16 => PictureType::ScreenCapture,
+            17 => PictureType::BrightFish,
+            18 => PictureType::Illustration,
+            19 => PictureType::BandLogo,
+            20 => PictureType::PublisherLogo,
+            _ => unreachable!("Invalid variant for PictureType: {}", self),
+        }
+    }
+}
+
 impl Wire2Api<u32> for u32 {
     fn wire2api(self) -> u32 {
         self
@@ -90,6 +142,60 @@ impl Wire2Api<u8> for u8 {
 
 // Section: impl IntoDart
 
+impl support::IntoDart for MimeType {
+    fn into_dart(self) -> support::DartAbi {
+        match self {
+            Self::Png => 0,
+            Self::Jpeg => 1,
+            Self::Tiff => 2,
+            Self::Bmp => 3,
+            Self::Gif => 4,
+            Self::None => 5,
+        }
+        .into_dart()
+    }
+}
+
+impl support::IntoDart for Picture {
+    fn into_dart(self) -> support::DartAbi {
+        vec![
+            self.picture_type.into_dart(),
+            self.mime_type.into_dart(),
+            self.bytes.into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl support::IntoDartExceptPrimitive for Picture {}
+
+impl support::IntoDart for PictureType {
+    fn into_dart(self) -> support::DartAbi {
+        match self {
+            Self::Other => 0,
+            Self::Icon => 1,
+            Self::OtherIcon => 2,
+            Self::CoverFront => 3,
+            Self::CoverBack => 4,
+            Self::Leaflet => 5,
+            Self::Media => 6,
+            Self::LeadArtist => 7,
+            Self::Artist => 8,
+            Self::Conductor => 9,
+            Self::Band => 10,
+            Self::Composer => 11,
+            Self::Lyricist => 12,
+            Self::RecordingLocation => 13,
+            Self::DuringRecording => 14,
+            Self::DuringPerformance => 15,
+            Self::ScreenCapture => 16,
+            Self::BrightFish => 17,
+            Self::Illustration => 18,
+            Self::BandLogo => 19,
+            Self::PublisherLogo => 20,
+        }
+        .into_dart()
+    }
+}
 impl support::IntoDart for Tag {
     fn into_dart(self) -> support::DartAbi {
         vec![
@@ -99,7 +205,7 @@ impl support::IntoDart for Tag {
             self.year.into_dart(),
             self.genre.into_dart(),
             self.duration.into_dart(),
-            self.picture.into_dart(),
+            self.pictures.into_dart(),
         ]
         .into_dart()
     }

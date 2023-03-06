@@ -24,6 +24,15 @@ pub extern "C" fn new_box_autoadd_u32_0(value: u32) -> *mut u32 {
 }
 
 #[no_mangle]
+pub extern "C" fn new_list_picture_0(len: i32) -> *mut wire_list_picture {
+    let wrap = wire_list_picture {
+        ptr: support::new_leak_vec_ptr(<wire_Picture>::new_with_null_ptr(), len),
+        len,
+    };
+    support::new_leak_box_ptr(wrap)
+}
+
+#[no_mangle]
 pub extern "C" fn new_uint_8_list_0(len: i32) -> *mut wire_uint_8_list {
     let ans = wire_uint_8_list {
         ptr: support::new_leak_vec_ptr(Default::default(), len),
@@ -54,6 +63,26 @@ impl Wire2Api<u32> for *mut u32 {
     }
 }
 
+impl Wire2Api<Vec<Picture>> for *mut wire_list_picture {
+    fn wire2api(self) -> Vec<Picture> {
+        let vec = unsafe {
+            let wrap = support::box_from_leak_ptr(self);
+            support::vec_from_leak_ptr(wrap.ptr, wrap.len)
+        };
+        vec.into_iter().map(Wire2Api::wire2api).collect()
+    }
+}
+
+impl Wire2Api<Picture> for wire_Picture {
+    fn wire2api(self) -> Picture {
+        Picture {
+            picture_type: self.picture_type.wire2api(),
+            mime_type: self.mime_type.wire2api(),
+            bytes: self.bytes.wire2api(),
+        }
+    }
+}
+
 impl Wire2Api<Tag> for wire_Tag {
     fn wire2api(self) -> Tag {
         Tag {
@@ -63,7 +92,7 @@ impl Wire2Api<Tag> for wire_Tag {
             year: self.year.wire2api(),
             genre: self.genre.wire2api(),
             duration: self.duration.wire2api(),
-            picture: self.picture.wire2api(),
+            pictures: self.pictures.wire2api(),
         }
     }
 }
@@ -80,6 +109,21 @@ impl Wire2Api<Vec<u8>> for *mut wire_uint_8_list {
 
 #[repr(C)]
 #[derive(Clone)]
+pub struct wire_list_picture {
+    ptr: *mut wire_Picture,
+    len: i32,
+}
+
+#[repr(C)]
+#[derive(Clone)]
+pub struct wire_Picture {
+    picture_type: i32,
+    mime_type: i32,
+    bytes: *mut wire_uint_8_list,
+}
+
+#[repr(C)]
+#[derive(Clone)]
 pub struct wire_Tag {
     title: *mut wire_uint_8_list,
     artist: *mut wire_uint_8_list,
@@ -87,7 +131,7 @@ pub struct wire_Tag {
     year: *mut u32,
     genre: *mut wire_uint_8_list,
     duration: *mut u32,
-    picture: *mut wire_uint_8_list,
+    pictures: *mut wire_list_picture,
 }
 
 #[repr(C)]
@@ -109,6 +153,16 @@ impl<T> NewWithNullPtr for *mut T {
     }
 }
 
+impl NewWithNullPtr for wire_Picture {
+    fn new_with_null_ptr() -> Self {
+        Self {
+            picture_type: Default::default(),
+            mime_type: Default::default(),
+            bytes: core::ptr::null_mut(),
+        }
+    }
+}
+
 impl NewWithNullPtr for wire_Tag {
     fn new_with_null_ptr() -> Self {
         Self {
@@ -118,7 +172,7 @@ impl NewWithNullPtr for wire_Tag {
             year: core::ptr::null_mut(),
             genre: core::ptr::null_mut(),
             duration: core::ptr::null_mut(),
-            picture: core::ptr::null_mut(),
+            pictures: core::ptr::null_mut(),
         }
     }
 }

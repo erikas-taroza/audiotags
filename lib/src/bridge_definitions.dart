@@ -17,6 +17,54 @@ abstract class Audiotags {
   FlutterRustBridgeTaskConstMeta get kWriteConstMeta;
 }
 
+/// The MIME type of the picture.
+enum MimeType {
+  Png,
+  Jpeg,
+  Tiff,
+  Bmp,
+  Gif,
+
+  /// An unknown mimetype. Represented by the string.
+  None,
+}
+
+class Picture {
+  final PictureType pictureType;
+  final MimeType mimeType;
+  final Uint8List bytes;
+  Picture({
+    required this.pictureType,
+    required this.mimeType,
+    required this.bytes,
+  });
+}
+
+/// The type of picture of the song.
+enum PictureType {
+  Other,
+  Icon,
+  OtherIcon,
+  CoverFront,
+  CoverBack,
+  Leaflet,
+  Media,
+  LeadArtist,
+  Artist,
+  Conductor,
+  Band,
+  Composer,
+  Lyricist,
+  RecordingLocation,
+  DuringRecording,
+  DuringPerformance,
+  ScreenCapture,
+  BrightFish,
+  Illustration,
+  BandLogo,
+  PublisherLogo,
+}
+
 /// Represents the metadata of the file.
 class Tag {
   /// The title of the song.
@@ -38,8 +86,8 @@ class Tag {
   /// when writing will do nothing.
   final int? duration;
 
-  /// The front cover of the song in bytes.
-  final Uint8List? picture;
+  /// All the pictures of the song.
+  final List<Picture> pictures;
   Tag({
     this.title,
     this.artist,
@@ -47,6 +95,6 @@ class Tag {
     this.year,
     this.genre,
     this.duration,
-    this.picture,
+    required this.pictures,
   });
 }

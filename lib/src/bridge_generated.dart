@@ -72,6 +72,18 @@ class AudiotagsImpl implements Audiotags {
     return raw as int;
   }
 
+  int _wire2api_i32(dynamic raw) {
+    return raw as int;
+  }
+
+  List<Picture> _wire2api_list_picture(dynamic raw) {
+    return (raw as List<dynamic>).map(_wire2api_picture).toList();
+  }
+
+  MimeType _wire2api_mime_type(dynamic raw) {
+    return MimeType.values[raw];
+  }
+
   String? _wire2api_opt_String(dynamic raw) {
     return raw == null ? null : _wire2api_String(raw);
   }
@@ -80,8 +92,19 @@ class AudiotagsImpl implements Audiotags {
     return raw == null ? null : _wire2api_box_autoadd_u32(raw);
   }
 
-  Uint8List? _wire2api_opt_uint_8_list(dynamic raw) {
-    return raw == null ? null : _wire2api_uint_8_list(raw);
+  Picture _wire2api_picture(dynamic raw) {
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return Picture(
+      pictureType: _wire2api_picture_type(arr[0]),
+      mimeType: _wire2api_mime_type(arr[1]),
+      bytes: _wire2api_uint_8_list(arr[2]),
+    );
+  }
+
+  PictureType _wire2api_picture_type(dynamic raw) {
+    return PictureType.values[raw];
   }
 
   Tag _wire2api_tag(dynamic raw) {
@@ -95,7 +118,7 @@ class AudiotagsImpl implements Audiotags {
       year: _wire2api_opt_box_autoadd_u32(arr[3]),
       genre: _wire2api_opt_String(arr[4]),
       duration: _wire2api_opt_box_autoadd_u32(arr[5]),
-      picture: _wire2api_opt_uint_8_list(arr[6]),
+      pictures: _wire2api_list_picture(arr[6]),
     );
   }
 
@@ -117,6 +140,21 @@ class AudiotagsImpl implements Audiotags {
 }
 
 // Section: api2wire
+
+@protected
+int api2wire_i32(int raw) {
+  return raw;
+}
+
+@protected
+int api2wire_mime_type(MimeType raw) {
+  return api2wire_i32(raw.index);
+}
+
+@protected
+int api2wire_picture_type(PictureType raw) {
+  return api2wire_i32(raw.index);
+}
 
 @protected
 int api2wire_u32(int raw) {
@@ -153,6 +191,15 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
   }
 
   @protected
+  ffi.Pointer<wire_list_picture> api2wire_list_picture(List<Picture> raw) {
+    final ans = inner.new_list_picture_0(raw.length);
+    for (var i = 0; i < raw.length; ++i) {
+      _api_fill_to_wire_picture(raw[i], ans.ref.ptr[i]);
+    }
+    return ans;
+  }
+
+  @protected
   ffi.Pointer<wire_uint_8_list> api2wire_opt_String(String? raw) {
     return raw == null ? ffi.nullptr : api2wire_String(raw);
   }
@@ -160,11 +207,6 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
   @protected
   ffi.Pointer<ffi.Uint32> api2wire_opt_box_autoadd_u32(int? raw) {
     return raw == null ? ffi.nullptr : api2wire_box_autoadd_u32(raw);
-  }
-
-  @protected
-  ffi.Pointer<wire_uint_8_list> api2wire_opt_uint_8_list(Uint8List? raw) {
-    return raw == null ? ffi.nullptr : api2wire_uint_8_list(raw);
   }
 
   @protected
@@ -182,6 +224,12 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
     _api_fill_to_wire_tag(apiObj, wireObj.ref);
   }
 
+  void _api_fill_to_wire_picture(Picture apiObj, wire_Picture wireObj) {
+    wireObj.picture_type = api2wire_picture_type(apiObj.pictureType);
+    wireObj.mime_type = api2wire_mime_type(apiObj.mimeType);
+    wireObj.bytes = api2wire_uint_8_list(apiObj.bytes);
+  }
+
   void _api_fill_to_wire_tag(Tag apiObj, wire_Tag wireObj) {
     wireObj.title = api2wire_opt_String(apiObj.title);
     wireObj.artist = api2wire_opt_String(apiObj.artist);
@@ -189,7 +237,7 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
     wireObj.year = api2wire_opt_box_autoadd_u32(apiObj.year);
     wireObj.genre = api2wire_opt_String(apiObj.genre);
     wireObj.duration = api2wire_opt_box_autoadd_u32(apiObj.duration);
-    wireObj.picture = api2wire_opt_uint_8_list(apiObj.picture);
+    wireObj.pictures = api2wire_list_picture(apiObj.pictures);
   }
 }
 
@@ -349,6 +397,21 @@ class AudiotagsWire implements FlutterRustBridgeWireBase {
   late final _new_box_autoadd_u32_0 = _new_box_autoadd_u32_0Ptr
       .asFunction<ffi.Pointer<ffi.Uint32> Function(int)>();
 
+  ffi.Pointer<wire_list_picture> new_list_picture_0(
+    int len,
+  ) {
+    return _new_list_picture_0(
+      len,
+    );
+  }
+
+  late final _new_list_picture_0Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<wire_list_picture> Function(
+              ffi.Int32)>>('new_list_picture_0');
+  late final _new_list_picture_0 = _new_list_picture_0Ptr
+      .asFunction<ffi.Pointer<wire_list_picture> Function(int)>();
+
   ffi.Pointer<wire_uint_8_list> new_uint_8_list_0(
     int len,
   ) {
@@ -388,6 +451,23 @@ class wire_uint_8_list extends ffi.Struct {
   external int len;
 }
 
+class wire_Picture extends ffi.Struct {
+  @ffi.Int32()
+  external int picture_type;
+
+  @ffi.Int32()
+  external int mime_type;
+
+  external ffi.Pointer<wire_uint_8_list> bytes;
+}
+
+class wire_list_picture extends ffi.Struct {
+  external ffi.Pointer<wire_Picture> ptr;
+
+  @ffi.Int32()
+  external int len;
+}
+
 class wire_Tag extends ffi.Struct {
   external ffi.Pointer<wire_uint_8_list> title;
 
@@ -401,7 +481,7 @@ class wire_Tag extends ffi.Struct {
 
   external ffi.Pointer<ffi.Uint32> duration;
 
-  external ffi.Pointer<wire_uint_8_list> picture;
+  external ffi.Pointer<wire_list_picture> pictures;
 }
 
 typedef DartPostCObjectFnType = ffi.Pointer<
