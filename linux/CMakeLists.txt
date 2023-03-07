@@ -39,7 +39,7 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
 # Download the binary from GitHub.
-set(Version "1.0.3")
+set(Version "1.1.0")
 set(LibPath "${CMAKE_CURRENT_SOURCE_DIR}/libaudiotags.so")
 if(NOT EXISTS ${LibPath})
   file(DOWNLOAD
