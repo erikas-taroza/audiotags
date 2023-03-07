@@ -10,6 +10,8 @@ This will have to be installed (not manually, see below). The versions of `flutt
 there is `flutter_rust_bridge_codegen` (CLI tool) and `flutter_rust_bridge` (Rust + Dart dependency).
 These must all have the same version for proper functionality.
 
+If you need it, the documentation for `flutter_rust_bridge` is [here](https://cjycode.com/flutter_rust_bridge/).
+
 ## Plugin Tool
 I have written a tool in Python that allows one to easily run common commands.
 This tool can be used to run the codegen and build the libraries.
