@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -50,14 +49,20 @@ class _MyAppState extends State<MyApp>
                             const SizedBox(height: 10),
                             ElevatedButton(
                                 child: const Text("Write"),
-                                onPressed: () {
+                                onPressed: () async {
                                     Tag tag = Tag(
                                         title: "Title",
                                         artist: "Artist",
                                         album: "Album",
                                         genre: "Genre",
                                         year: 2000,
-                                        picture: Uint8List.fromList([0, 0, 0, 0])
+                                        pictures: [
+                                            Picture(
+                                                bytes: Uint8List.fromList([0, 0, 0, 0]),
+                                                mimeType: MimeType.None,
+                                                pictureType: PictureType.Other
+                                            )
+                                        ]
                                     );
                                     AudioTags.write(path, tag);
                                 },
@@ -73,7 +78,7 @@ class _MyAppState extends State<MyApp>
                                     String? genre = tag?.genre;
                                     int? year = tag?.year;
                                     int? duration = tag?.duration;
-                                    List<int>? pictureBytes = tag?.picture;
+                                    List<Picture>? pictures = tag?.pictures;
 
                                     debugPrint("Title: $title");
                                     debugPrint("Artist: $artist");
@@ -81,7 +86,7 @@ class _MyAppState extends State<MyApp>
                                     debugPrint("Genre: $genre");
                                     debugPrint("Year: ${year.toString()}");
                                     debugPrint("Duration: ${duration.toString()}");
-                                    debugPrint("# Picture Bytes: ${pictureBytes?.length.toString()}");
+                                    debugPrint("Pictures: $pictures");
                                 },
                             ),
                         ],

@@ -3,12 +3,12 @@ mod mp4;
 mod picture;
 mod tag;
 
-use anyhow::anyhow;
+use anyhow::{anyhow, Context};
 use lofty::{Accessor, AudioFile, ItemKey, Probe, TagExt, TaggedFile, TaggedFileExt};
 use tag::Tag;
 
 /// Returns a `TaggedFile` at the given path.
-fn get_file(path: String) -> anyhow::Result<TaggedFile> {
+fn get_file(path: &str) -> anyhow::Result<TaggedFile> {
     match Probe::open(path) {
         Ok(file) => match file.read() {
             Ok(file) => Ok(file),
@@ -19,12 +19,19 @@ fn get_file(path: String) -> anyhow::Result<TaggedFile> {
 }
 
 pub fn read(path: String) -> anyhow::Result<Tag> {
-    match path.split('.').last().unwrap() {
-        "mp4" | "m4a" | "m4p" | "m4b" | "m4r" | "m4v" => return mp4::read(&path),
+    let path = std::fs::canonicalize(path)?;
+    let extension = path
+        .extension()
+        .context("The file does not have an extension.")?
+        .to_str()
+        .context("Could not read the file extension.")?;
+
+    match extension {
+        "mp4" | "m4a" | "m4p" | "m4b" | "m4r" | "m4v" => return mp4::read(path.to_str().unwrap()),
         _ => (),
     };
 
-    let file = get_file(path)?;
+    let file = get_file(path.to_str().unwrap())?;
 
     let tag = match file.primary_tag() {
         Some(primary_tag) => Ok(primary_tag),
@@ -60,15 +67,26 @@ pub fn read(path: String) -> anyhow::Result<Tag> {
 }
 
 pub fn write(path: String, data: Tag) -> anyhow::Result<()> {
-    match path.split('.').last().unwrap() {
-        "mp4" | "m4a" | "m4p" | "m4b" | "m4r" | "m4v" => return mp4::write(&path, data),
+    let path = std::fs::canonicalize(path)?;
+    let extension = path
+        .extension()
+        .context("The file does not have an extension.")?
+        .to_str()
+        .context("Could not read the file extension.")?;
+
+    match extension {
+        "mp4" | "m4a" | "m4p" | "m4b" | "m4r" | "m4v" => {
+            return mp4::write(path.to_str().unwrap(), data)
+        }
         _ => (),
     };
 
-    let mut file = get_file(path.clone())?;
+    let mut file = get_file(path.to_str().unwrap())?;
 
-    // Remove the existing tag.
-    file.clear();
+    // Remove the existing tags.
+    for tag in file.tags() {
+        tag.remove_from_path(&path)?;
+    }
 
     // If there is no data to be written, then return.
     if data.is_empty() {
@@ -125,11 +143,13 @@ pub fn write(path: String, data: Tag) -> anyhow::Result<()> {
 
 #[cfg(test)]
 mod tests {
+    use std::io::Read;
+
     use super::*;
 
     #[test]
-    fn read_tag() {
-        let tag = read("/home/erikas/Downloads/test.mp3".to_string()).expect("Could not read tag.");
+    fn read_tag_mp3() {
+        let tag = read("samples/test.mp3".to_string()).expect("Could not read tag.");
 
         println!("{:?}", tag.title);
         println!("{:?}", tag.artist);
@@ -141,19 +161,129 @@ mod tests {
     }
 
     #[test]
-    fn write_tag() {
-        let _tag = write(
-            "/home/erikas/Music/1.mp3".to_string(),
+    fn clear_tag_mp3() {
+        write(
+            "samples/test.mp3".to_string(),
+            Tag {
+                title: None,
+                artist: None,
+                album: None,
+                year: None,
+                genre: None,
+                duration: None,
+                pictures: Vec::new(),
+            },
+        )
+        .expect("Could not write tag.");
+        read_tag_mp3();
+    }
+
+    #[test]
+    fn write_tag_mp3() {
+        let picture1 = picture::Picture::new(
+            picture::PictureType::CoverFront,
+            picture::MimeType::Jpeg,
+            std::fs::File::open("samples/picture1.jpg")
+                .unwrap()
+                .bytes()
+                .map(|b| b.unwrap())
+                .collect(),
+        );
+
+        let picture2 = picture::Picture::new(
+            picture::PictureType::CoverBack,
+            picture::MimeType::Jpeg,
+            std::fs::File::open("samples/picture2.jpg")
+                .unwrap()
+                .bytes()
+                .map(|b| b.unwrap())
+                .collect(),
+        );
+
+        write(
+            "samples/test.mp3".to_string(),
             Tag {
                 title: Some("Title".to_string()),
                 artist: Some("Artist".to_string()),
                 album: Some("Album".to_string()),
                 year: Some(2022),
                 genre: Some("Genre".to_string()),
-                // pictures: Some(vec![255]),
+                pictures: vec![picture1, picture2],
                 ..Default::default()
             },
         )
         .expect("Failed to write tag.");
+
+        read_tag_mp4();
+    }
+
+    #[test]
+    fn read_tag_mp4() {
+        let tag = read("samples/test.mp4".to_string()).expect("Could not read tag.");
+
+        println!("{:?}", tag.title);
+        println!("{:?}", tag.artist);
+        println!("{:?}", tag.album);
+        println!("{:?}", tag.year);
+        println!("{:?}", tag.genre);
+        println!("{:?}", tag.duration);
+        println!("{:?}", tag.pictures);
+    }
+
+    #[test]
+    fn clear_tag_mp4() {
+        write(
+            "samples/test.mp4".to_string(),
+            Tag {
+                title: None,
+                artist: None,
+                album: None,
+                year: None,
+                genre: None,
+                duration: None,
+                pictures: Vec::new(),
+            },
+        )
+        .expect("Could not write tag.");
+        read_tag_mp4();
+    }
+
+    #[test]
+    fn write_tag_mp4() {
+        let picture1 = picture::Picture::new(
+            picture::PictureType::CoverFront,
+            picture::MimeType::Jpeg,
+            std::fs::File::open("samples/picture1.jpg")
+                .unwrap()
+                .bytes()
+                .map(|b| b.unwrap())
+                .collect(),
+        );
+
+        let picture2 = picture::Picture::new(
+            picture::PictureType::CoverBack,
+            picture::MimeType::Jpeg,
+            std::fs::File::open("samples/picture2.jpg")
+                .unwrap()
+                .bytes()
+                .map(|b| b.unwrap())
+                .collect(),
+        );
+
+        write(
+            "samples/test.mp4".to_string(),
+            Tag {
+                title: Some("Title".to_string()),
+                artist: Some("Artist".to_string()),
+                album: Some("Album".to_string()),
+                year: Some(2022),
+                genre: Some("Genre".to_string()),
+                pictures: vec![picture1, picture2],
+                ..Default::default()
+            },
+        )
+        .expect("Failed to write tag.");
+
+        read_tag_mp4();
     }
 }

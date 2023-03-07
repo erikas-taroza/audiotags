@@ -1,3 +1,6 @@
+## 1.1.0
+- Improve support for pictures.
+
 ## 1.0.3
 - Return null if the file does not have a tag.
 

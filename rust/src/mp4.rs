@@ -6,7 +6,7 @@ use crate::{
     Tag,
 };
 
-pub fn read(path: &String) -> anyhow::Result<Tag> {
+pub fn read(path: &str) -> anyhow::Result<Tag> {
     let mp4tag = mp4ameta::Tag::read_from_path(path);
 
     match mp4tag {
@@ -28,11 +28,16 @@ pub fn read(path: &String) -> anyhow::Result<Tag> {
                 })
                 .collect::<Vec<Picture>>();
 
+            let year = match mp4tag.year() {
+                Some(year_string) => year_string.parse::<u32>().ok(),
+                None => None,
+            };
+
             Ok(Tag {
                 title: mp4tag.title().map(|f| f.to_string()),
                 artist: mp4tag.artist().map(|f| f.to_string()),
                 album: mp4tag.album().map(|f| f.to_string()),
-                year: mp4tag.year().map(|f| f.parse::<u32>().unwrap()),
+                year,
                 genre: mp4tag.genre().map(|f| f.to_string()),
                 duration: mp4tag.duration().map(|dur| dur.as_secs() as u32),
                 pictures,
@@ -41,7 +46,7 @@ pub fn read(path: &String) -> anyhow::Result<Tag> {
     }
 }
 
-pub fn write(path: &String, data: Tag) -> anyhow::Result<()> {
+pub fn write(path: &str, data: Tag) -> anyhow::Result<()> {
     let mp4tag = mp4ameta::Tag::read_from_path(path);
 
     let mut mp4tag = match mp4tag {
@@ -53,6 +58,7 @@ pub fn write(path: &String, data: Tag) -> anyhow::Result<()> {
 
     // If there is no data to be written, then return.
     if data.is_empty() {
+        mp4tag.write_to_path(path)?;
         return Ok(());
     }
 

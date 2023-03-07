@@ -2,6 +2,8 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 
 import './ffi.dart';
 
+export 'bridge_definitions.dart' show Tag, Picture, MimeType, PictureType;
+
 class AudioTags
 {
     /// Read the metadata at the given path. Returns

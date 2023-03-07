@@ -12,7 +12,7 @@ String? album = tag?.album;
 String? genre = tag?.genre;
 int? year = tag?.year;
 int? duration = tag?.duration;
-List<int>? pictureBytes = tag?.picture;
+List<Picture>? pictures = tag?.pictures;
 ```
 
 ### Write
@@ -22,8 +22,14 @@ Tag tag = Tag(
     artist: "Artist",
     album: "Album",
     genre: "Genre",
-    year: 1970,
-    picture: Uint8List.fromList([0, 0, 0, 0])
+    year: 2000,
+    pictures: [
+        Picture(
+            bytes: Uint8List.fromList([0, 0, 0, 0]),
+            mimeType: MimeType.None,
+            pictureType: PictureType.Other
+        )
+    ]
 );
 AudioTags.write(path, tag);
 ```
