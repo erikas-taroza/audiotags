@@ -26,6 +26,47 @@ impl Debug for Picture {
     }
 }
 
+/// Implements the `From` trait to allow the `lofty` enums to be converted. 
+macro_rules! impl_enum_from
+{
+    ($from_enum:ty, $for_enum:ty; $($variant:ident),+) => {
+        impl From<$from_enum> for $for_enum {
+            fn from(value: $from_enum) -> Self {
+                match value {
+                    $(<$from_enum>::$variant => <$for_enum>::$variant),*
+                }
+            }
+        }
+
+        impl From<$for_enum> for $from_enum {
+            fn from(value: $for_enum) -> Self {
+                match value {
+                    $(<$for_enum>::$variant => <$from_enum>::$variant),*
+                }
+            }
+        }
+    };
+
+    ($from_enum:ty, $for_enum:ty, $default_variant:ident; $($variant:ident),+) => {
+        impl From<$from_enum> for $for_enum {
+            fn from(value: $from_enum) -> Self {
+                match value {
+                    $(<$from_enum>::$variant => <$for_enum>::$variant),*,
+                    _ => <$for_enum>::$default_variant
+                }
+            }
+        }
+
+        impl From<$for_enum> for $from_enum {
+            fn from(value: $for_enum) -> Self {
+                match value {
+                    $(<$for_enum>::$variant => <$from_enum>::$variant),*,
+                }
+            }
+        }
+    };
+}
+
 // Almost the same as lofty's PictureType except without
 // the undefined type.
 /// The type of picture of the song.
@@ -54,62 +95,32 @@ pub enum PictureType {
     PublisherLogo,
 }
 
-impl From<lofty::PictureType> for PictureType {
-    fn from(value: lofty::PictureType) -> Self {
-        match value {
-            lofty::PictureType::Other => PictureType::Other,
-            lofty::PictureType::Icon => PictureType::Icon,
-            lofty::PictureType::OtherIcon => PictureType::OtherIcon,
-            lofty::PictureType::CoverFront => PictureType::CoverFront,
-            lofty::PictureType::CoverBack => PictureType::CoverBack,
-            lofty::PictureType::Leaflet => PictureType::Leaflet,
-            lofty::PictureType::Media => PictureType::Media,
-            lofty::PictureType::LeadArtist => PictureType::LeadArtist,
-            lofty::PictureType::Artist => PictureType::Artist,
-            lofty::PictureType::Conductor => PictureType::Conductor,
-            lofty::PictureType::Band => PictureType::Band,
-            lofty::PictureType::Composer => PictureType::Composer,
-            lofty::PictureType::Lyricist => PictureType::Lyricist,
-            lofty::PictureType::RecordingLocation => PictureType::RecordingLocation,
-            lofty::PictureType::DuringRecording => PictureType::DuringRecording,
-            lofty::PictureType::DuringPerformance => PictureType::DuringPerformance,
-            lofty::PictureType::ScreenCapture => PictureType::ScreenCapture,
-            lofty::PictureType::BrightFish => PictureType::BrightFish,
-            lofty::PictureType::Illustration => PictureType::Illustration,
-            lofty::PictureType::BandLogo => PictureType::BandLogo,
-            lofty::PictureType::PublisherLogo => PictureType::PublisherLogo,
-            _ => PictureType::Other,
-        }
-    }
-}
-
-impl From<PictureType> for lofty::PictureType {
-    fn from(value: PictureType) -> Self {
-        match value {
-            PictureType::Other => lofty::PictureType::Other,
-            PictureType::Icon => lofty::PictureType::Icon,
-            PictureType::OtherIcon => lofty::PictureType::OtherIcon,
-            PictureType::CoverFront => lofty::PictureType::CoverFront,
-            PictureType::CoverBack => lofty::PictureType::CoverBack,
-            PictureType::Leaflet => lofty::PictureType::Leaflet,
-            PictureType::Media => lofty::PictureType::Media,
-            PictureType::LeadArtist => lofty::PictureType::LeadArtist,
-            PictureType::Artist => lofty::PictureType::Artist,
-            PictureType::Conductor => lofty::PictureType::Conductor,
-            PictureType::Band => lofty::PictureType::Band,
-            PictureType::Composer => lofty::PictureType::Composer,
-            PictureType::Lyricist => lofty::PictureType::Lyricist,
-            PictureType::RecordingLocation => lofty::PictureType::RecordingLocation,
-            PictureType::DuringRecording => lofty::PictureType::DuringRecording,
-            PictureType::DuringPerformance => lofty::PictureType::DuringPerformance,
-            PictureType::ScreenCapture => lofty::PictureType::ScreenCapture,
-            PictureType::BrightFish => lofty::PictureType::BrightFish,
-            PictureType::Illustration => lofty::PictureType::Illustration,
-            PictureType::BandLogo => lofty::PictureType::BandLogo,
-            PictureType::PublisherLogo => lofty::PictureType::PublisherLogo,
-        }
-    }
-}
+impl_enum_from!(
+    lofty::PictureType,
+    PictureType,
+    Other;
+    Other,
+    Icon,
+    OtherIcon,
+    CoverFront,
+    CoverBack,
+    Leaflet,
+    Media,
+    LeadArtist,
+    Artist,
+    Conductor,
+    Band,
+    Composer,
+    Lyricist,
+    RecordingLocation,
+    DuringRecording,
+    DuringPerformance,
+    ScreenCapture,
+    BrightFish,
+    Illustration,
+    BandLogo,
+    PublisherLogo
+);
 
 // The same as lofty's MimeType.
 // TODO: Support unknown type (code gen doesn't work for it) https://github.com/fzyzcjy/flutter_rust_bridge/issues/1073
@@ -126,30 +137,14 @@ pub enum MimeType {
     None,
 }
 
-impl From<lofty::MimeType> for MimeType {
-    fn from(value: lofty::MimeType) -> Self {
-        match value {
-            lofty::MimeType::Png => MimeType::Png,
-            lofty::MimeType::Jpeg => MimeType::Jpeg,
-            lofty::MimeType::Tiff => MimeType::Tiff,
-            lofty::MimeType::Bmp => MimeType::Bmp,
-            lofty::MimeType::Gif => MimeType::Gif,
-            // lofty::MimeType::Unknown(mimetype) => MimeType::Unknown(mimetype),
-            _ => MimeType::None,
-        }
-    }
-}
-
-impl From<MimeType> for lofty::MimeType {
-    fn from(value: MimeType) -> lofty::MimeType {
-        match value {
-            MimeType::Png => lofty::MimeType::Png,
-            MimeType::Jpeg => lofty::MimeType::Jpeg,
-            MimeType::Tiff => lofty::MimeType::Tiff,
-            MimeType::Bmp => lofty::MimeType::Bmp,
-            MimeType::Gif => lofty::MimeType::Gif,
-            // lofty::MimeType::Unknown(mimetype) => MimeType::Unknown(mimetype),
-            _ => lofty::MimeType::None,
-        }
-    }
-}
+impl_enum_from!(
+    lofty::MimeType,
+    MimeType,
+    None;
+    Png,
+    Jpeg,
+    Tiff,
+    Bmp,
+    Gif,
+    None
+);

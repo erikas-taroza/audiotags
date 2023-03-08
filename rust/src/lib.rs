@@ -214,7 +214,7 @@ mod tests {
         )
         .expect("Failed to write tag.");
 
-        read_tag_mp4();
+        read_tag_mp3();
     }
 
     #[test]
