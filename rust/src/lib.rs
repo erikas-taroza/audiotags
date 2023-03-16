@@ -1,9 +1,8 @@
 mod bridge_generated; /* AUTO INJECTED BY flutter_rust_bridge. This line may not be accurate, and you can change it according to your needs. */
-mod mp4;
 mod picture;
 mod tag;
 
-use anyhow::{anyhow, Context};
+use anyhow::anyhow;
 use lofty::{Accessor, AudioFile, ItemKey, Probe, TagExt, TaggedFile, TaggedFileExt};
 use tag::Tag;
 
@@ -19,19 +18,7 @@ fn get_file(path: &str) -> anyhow::Result<TaggedFile> {
 }
 
 pub fn read(path: String) -> anyhow::Result<Tag> {
-    let path = std::fs::canonicalize(path)?;
-    let extension = path
-        .extension()
-        .context("The file does not have an extension.")?
-        .to_str()
-        .context("Could not read the file extension.")?;
-
-    match extension {
-        "mp4" | "m4a" | "m4p" | "m4b" | "m4r" | "m4v" => return mp4::read(path.to_str().unwrap()),
-        _ => (),
-    };
-
-    let file = get_file(path.to_str().unwrap())?;
+    let file = get_file(&path)?;
 
     let tag = match file.primary_tag() {
         Some(primary_tag) => Ok(primary_tag),
@@ -67,21 +54,7 @@ pub fn read(path: String) -> anyhow::Result<Tag> {
 }
 
 pub fn write(path: String, data: Tag) -> anyhow::Result<()> {
-    let path = std::fs::canonicalize(path)?;
-    let extension = path
-        .extension()
-        .context("The file does not have an extension.")?
-        .to_str()
-        .context("Could not read the file extension.")?;
-
-    match extension {
-        "mp4" | "m4a" | "m4p" | "m4b" | "m4r" | "m4v" => {
-            return mp4::write(path.to_str().unwrap(), data)
-        }
-        _ => (),
-    };
-
-    let mut file = get_file(path.to_str().unwrap())?;
+    let mut file = get_file(&path)?;
 
     // Remove the existing tags.
     for tag in file.tags() {

@@ -26,7 +26,7 @@ impl Debug for Picture {
     }
 }
 
-/// Implements the `From` trait to allow the `lofty` enums to be converted. 
+/// Implements the `From` trait to allow the `lofty` enums to be converted.
 macro_rules! impl_enum_from
 {
     ($from_enum:ty, $for_enum:ty; $($variant:ident),+) => {
