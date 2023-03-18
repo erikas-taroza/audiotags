@@ -58,7 +58,7 @@ def init():
             pubspec_text = add_dependency("ffi", version="^2.0.1", dev=False)
 
         if "flutter_rust_bridge:" not in pubspec_text:
-            pubspec_text = add_dependency("flutter_rust_bridge", version="^1.65.0", dev=False)
+            pubspec_text = add_dependency("flutter_rust_bridge", version="^1.71.0", dev=False)
         
         if "ffigen:" not in pubspec_text:
             pubspec_text = add_dependency("ffigen", version="^6.1.2", dev=True)
@@ -164,9 +164,10 @@ def init():
 def code_gen():
     print("Generating code with flutter_rust_bridge...\n")
 
-    os.system("cargo install flutter_rust_bridge_codegen --version 1.65.0")
+    os.system("cargo install flutter_rust_bridge_codegen --version 1.71.0")
     os.system('CPATH="$(clang -v 2>&1 | grep "Selected GCC installation" | rev | cut -d\' \' -f1 | rev)/include" \
         flutter_rust_bridge_codegen \
+        --dart-enums-style \
         --rust-input ./rust/src/lib.rs \
         --dart-output ./lib/src/bridge_generated.dart \
         --dart-decl-output ./lib/src/bridge_definitions.dart \

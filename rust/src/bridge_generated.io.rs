@@ -163,6 +163,12 @@ impl NewWithNullPtr for wire_Picture {
     }
 }
 
+impl Default for wire_Picture {
+    fn default() -> Self {
+        Self::new_with_null_ptr()
+    }
+}
+
 impl NewWithNullPtr for wire_Tag {
     fn new_with_null_ptr() -> Self {
         Self {
@@ -174,6 +180,12 @@ impl NewWithNullPtr for wire_Tag {
             duration: core::ptr::null_mut(),
             pictures: core::ptr::null_mut(),
         }
+    }
+}
+
+impl Default for wire_Tag {
+    fn default() -> Self {
+        Self::new_with_null_ptr()
     }
 }
 

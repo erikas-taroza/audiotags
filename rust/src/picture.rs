@@ -1,8 +1,12 @@
 use std::fmt::Debug;
 
+/// An object representing a picture metadata.
 pub struct Picture {
+    /// The type of picture (ex. front cover)
     pub picture_type: PictureType,
+    /// The mime type of the picture (ex. `image/jpg`)
     pub mime_type: MimeType,
+    /// The picture data, in bytes.
     pub bytes: Vec<u8>,
 }
 
