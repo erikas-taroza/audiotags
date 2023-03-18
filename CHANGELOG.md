@@ -1,3 +1,6 @@
+## 1.1.1
+- BREAKING: Enum variants are camelCased.
+
 ## 1.1.0
 - Improve support for pictures.
 

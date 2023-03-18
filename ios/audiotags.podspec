@@ -1,5 +1,5 @@
 # Download the binaries from GitHub.
-version = "1.1.0"
+version = "1.1.1"
 lib_url = "https://github.com/erikas-taroza/audiotags/blob/v#{version}/ios/Frameworks/audiotags.xcframework"
 
 `
@@ -20,7 +20,7 @@ cd ../..
 
 Pod::Spec.new do |s|
   s.name             = 'audiotags'
-  s.version          = '1.1.0'
+  s.version          = '1.1.1'
   s.summary          = 'A newFlutter plugin project.'
   s.description      = <<-DESC
 A new Flutter plugin project.
