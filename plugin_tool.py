@@ -1,4 +1,4 @@
-import argparse, re, os, shutil, requests, sys
+import argparse, re, os, shutil, sys
 
 parser = argparse.ArgumentParser(
     usage="Put this file in your root project directory and execute the commands.",
@@ -25,6 +25,12 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    "--bump-version",
+    type=str,
+    help="Bumps the version of the plugin to the given version. Ex. \"1.0.0\""
+)
+
+parser.add_argument(
     "--ios-ssl",
     action="store",
     help="Used to fix the build for OpenSSL if the vendored feature is being used on aarch64-apple-ios-sim target. Please provide the path to the openssl include directory."
@@ -41,10 +47,10 @@ def init():
     pascal_case_package_name = package_name.lower().replace("_", " ").title().replace(" ", "")
     
     with open("./pubspec.yaml", "w") as pubspec:
-        def add_dependency(dependency:str, version:str = "", dev:bool = False) -> str:
+        def add_dependency(dependency: str, version: str = "", dev: bool = False) -> str:
             key = ("dev_" if dev else "") + "dependencies"
-            split:list[str] = re.split(rf"\s{key}:\s", pubspec_text)
-            lines:list[str] = split[1].split("\n")
+            split: list[str] = re.split(rf"\s{key}:\s", pubspec_text)
+            lines: list[str] = split[1].split("\n")
             
             for i in range(0, len(lines)):
                 if lines[i].isspace() or len(lines[i]) == 0:
@@ -165,8 +171,7 @@ def code_gen():
     print("Generating code with flutter_rust_bridge...\n")
 
     os.system("cargo install flutter_rust_bridge_codegen --version 1.71.0")
-    os.system('CPATH="$(clang -v 2>&1 | grep "Selected GCC installation" | rev | cut -d\' \' -f1 | rev)/include" \
-        flutter_rust_bridge_codegen \
+    os.system('flutter_rust_bridge_codegen \
         --dart-enums-style \
         --rust-input ./rust/src/lib.rs \
         --dart-output ./lib/src/bridge_generated.dart \
@@ -184,7 +189,7 @@ def code_gen():
     if "ffi.dart" not in os.listdir("./lib/src"):
         package_name = open("./rust/Cargo.toml", "r").read().split("name = \"")[1].split("\"")[0]
         pascal_case_package_name = package_name.lower().replace("_", " ").title().replace(" ", "")
-
+        import requests
         file = open("./lib/src/ffi.dart", "w")
         file.write(
             requests.get(r"https://raw.githubusercontent.com/Desdaemon/flutter_rust_bridge_template/main/lib/ffi.dart")
@@ -194,7 +199,7 @@ def code_gen():
         )
 
 
-def build(targets:list[str], openssl_path:str = None):
+def build(targets: list[str], openssl_path: str = None):
     print("Building Rust code...\n")
 
     package_name = open("./rust/Cargo.toml", "r").read().split("name = \"")[1].split("\"")[0]
@@ -214,13 +219,15 @@ def build(targets:list[str], openssl_path:str = None):
             if os.path.exists(path):
                 os.remove(path)
 
-        os.system("cd rust && cargo ndk -t arm64-v8a -t armeabi-v7a -t x86 -t x86_64 -o ../android/src/main/jniLibs build --release && cd ..")
+        result = os.system("cd rust && cargo ndk -t arm64-v8a -t armeabi-v7a -t x86 -t x86_64 -o ../android/src/main/jniLibs build --release && cd ..")
+        assert result == 0
 
     if is_linux and "linux" in targets:
         print("Building Linux libraries...\n")
 
         os.system("rustup target add x86_64-unknown-linux-gnu")
-        os.system("cargo build --release --target x86_64-unknown-linux-gnu --manifest-path ./rust/Cargo.toml")
+        result = os.system("cargo build --release --target x86_64-unknown-linux-gnu --manifest-path ./rust/Cargo.toml")
+        assert result == 0
 
         if os.path.exists(f"./linux/lib{package_name}.so"):
             os.remove(f"./linux/lib{package_name}.so")
@@ -231,7 +238,8 @@ def build(targets:list[str], openssl_path:str = None):
         print("Building Windows libraries...\n")
 
         os.system("rustup target add x86_64-pc-windows-msvc")
-        os.system("cargo build --release --target x86_64-pc-windows-msvc --manifest-path ./rust/Cargo.toml")
+        result = os.system("cargo build --release --target x86_64-pc-windows-msvc --manifest-path ./rust/Cargo.toml")
+        assert result == 0
 
         if os.path.exists(f"./windows/{package_name}.dll"):
             os.remove(f"./windows/{package_name}.dll")
@@ -244,13 +252,16 @@ def build(targets:list[str], openssl_path:str = None):
 
             # Build for macOS.
             os.system("rustup target add aarch64-apple-darwin x86_64-apple-darwin")
-            os.system("cargo build --release --target aarch64-apple-darwin --manifest-path ./rust/Cargo.toml")
-            os.system("cargo build --release --target x86_64-apple-darwin --manifest-path ./rust/Cargo.toml")
+            result = os.system("cargo build --release --target aarch64-apple-darwin --manifest-path ./rust/Cargo.toml")
+            assert result == 0
+            result = os.system("cargo build --release --target x86_64-apple-darwin --manifest-path ./rust/Cargo.toml")
+            assert result == 0
             os.system(f'lipo "./rust/target/aarch64-apple-darwin/release/lib{package_name}.a" "./rust/target/x86_64-apple-darwin/release/lib{package_name}.a" -output "lib{package_name}.a" -create')
 
             if os.path.exists(f"./macos/Libs/lib{package_name}.a"):
                 os.remove(f"./macos/Libs/lib{package_name}.a")
 
+            os.makedirs("./macos/Libs", exist_ok=True)
             shutil.move(f"./lib{package_name}.a", "./macos/Libs")
 
         if "ios" in targets:
@@ -258,12 +269,14 @@ def build(targets:list[str], openssl_path:str = None):
             print("Building iOS libraries...\n")
 
             os.system("rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios")
-            os.system("cargo build --release --target aarch64-apple-ios --manifest-path ./rust/Cargo.toml")
+            result = os.system("cargo build --release --target aarch64-apple-ios --manifest-path ./rust/Cargo.toml")
+            assert result == 0
 
-            env_vars = f"OPENSSL_STATIC=1 OPENSSL_LIB_DIR=/usr/local/lib OPENSSL_INCLUDE_DIR={openssl_path} OPENSSL_NO_VENDOR=1 " if openssl_path is not None else ""
-            os.system(f"{env_vars}cargo build --release --target aarch64-apple-ios-sim --manifest-path ./rust/Cargo.toml")
+            result = os.system(f"cargo build --release --target aarch64-apple-ios-sim --manifest-path ./rust/Cargo.toml")
+            assert result == 0
 
-            os.system("cargo build --release --target x86_64-apple-ios --manifest-path ./rust/Cargo.toml")
+            result = os.system("CMAKE_OSX_SYSROOT=$(xcrun --sdk iphonesimulator --show-sdk-path) cargo build --release --target x86_64-apple-ios --manifest-path ./rust/Cargo.toml")
+            assert result == 0
             os.system(f'lipo "./rust/target/aarch64-apple-ios-sim/release/lib{package_name}.a" "./rust/target/x86_64-apple-ios/release/lib{package_name}.a" -output "lib{package_name}.a" -create')
             os.system(f"xcodebuild -create-xcframework -library ./rust/target/aarch64-apple-ios/release/lib{package_name}.a -library ./lib{package_name}.a -output {package_name}.xcframework")
             os.remove(f"./lib{package_name}.a")
@@ -271,7 +284,57 @@ def build(targets:list[str], openssl_path:str = None):
             if os.path.exists(f"./ios/Frameworks/{package_name}.xcframework"):
                 shutil.rmtree(f"./ios/Frameworks/{package_name}.xcframework")
 
+            os.makedirs("./ios/Frameworks", exist_ok=True)
             shutil.move(f"./{package_name}.xcframework", "./ios/Frameworks")
+
+
+def bump_version(version: str):
+    def replace_string_in_file(file, regex, replacement):
+        new_text = re.sub(regex, replacement, file.read(), count=1)
+        file.seek(0)
+        file.write(new_text)
+        file.seek(0)
+
+
+    # pubspec.yaml
+    pubspec = open("./pubspec.yaml", "r+")
+    replace_string_in_file(pubspec, r"version: [\d|\.]+\s", f"version: {version}\n")
+    pubspec.close()
+
+    # Cargo.toml
+    cargo = open("./rust/Cargo.toml", "r+")
+    replace_string_in_file(cargo, r'version = "[\d|\.]+"\s', f'version = "{version}"\n')
+    cargo.close()
+
+    # Android CMake
+    android_cmake = open("./android/CMakeLists.txt", "r+")
+    replace_string_in_file(android_cmake, r'set\(Version "[\d|\.]+"\)\s', f'set(Version "{version}")\n')
+    android_cmake.close()
+
+    # Linux CMake
+    linux_cmake = open("./linux/CMakeLists.txt", "r+")
+    replace_string_in_file(linux_cmake, r'set\(Version "[\d|\.]+"\)\s', f'set(Version "{version}")\n')
+    linux_cmake.close()
+
+    # Windows CMake
+    windows_cmake = open("./windows/CMakeLists.txt", "r+")
+    replace_string_in_file(windows_cmake, r'set\(Version "[\d|\.]+"\)\s', f'set(Version "{version}")\n')
+    windows_cmake.close()
+
+    pubspec_text = open("./pubspec.yaml", "r").read()
+    package_name = pubspec_text.split("name: ")[1].split("\n")[0].strip()
+
+    # macOS podspec
+    macos_podspec = open(f"./macos/{package_name}.podspec", "r+")
+    replace_string_in_file(macos_podspec, r'version = "[\d|\.]+"\s', f'version = "{version}"\n')
+    replace_string_in_file(macos_podspec, r"s\.version\s+= '[\d|\.]+'\s", f"s.version          = '{version}'\n")
+    macos_podspec.close()
+
+    # iOS podspec
+    ios_podspec = open(f"./ios/{package_name}.podspec", "r+")
+    replace_string_in_file(ios_podspec, r'version = "[\d|\.]+"\s', f'version = "{version}"\n')
+    replace_string_in_file(ios_podspec, r"s\.version\s+= '[\d|\.]+'\s", f"s.version          = '{version}'\n")
+    ios_podspec.close()
 
 
 if __name__ == "__main__":
@@ -288,3 +351,6 @@ if __name__ == "__main__":
         if len(args.build) == 0:
             targets = ["android", "linux", "windows", "ios", "macos"]
         build(targets, args.ios_ssl)
+
+    if args.bump_version:
+        bump_version(args.bump_version)

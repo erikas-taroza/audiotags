@@ -46,12 +46,19 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 
 # Download the binary from GitHub.
 set(Version "1.1.1")
-set(LibPath "${CMAKE_CURRENT_SOURCE_DIR}/audiotags.dll")
+set(LibPath "${CMAKE_CURRENT_SOURCE_DIR}/windows.tar.gz")
 if(NOT EXISTS ${LibPath})
   file(DOWNLOAD
-    "https://github.com/erikas-taroza/audiotags/blob/v${Version}/windows/audiotags.dll?raw=true"
+    "https://github.com/erikas-taroza/audiotags/releases/download/v${Version}/windows.tar.gz"
     ${LibPath}
     TLS_VERIFY ON
+  )
+endif()
+
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/audiotags.dll")
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -E tar -xzf windows.tar.gz
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
 endif()
 

@@ -1,21 +1,16 @@
 # Download the binaries from GitHub.
 version = "1.1.1"
-lib_url = "https://github.com/erikas-taroza/audiotags/blob/v#{version}/ios/Frameworks/audiotags.xcframework"
+lib_url = "https://github.com/erikas-taroza/audiotags/releases/download/v#{version}/ios.zip"
 
 `
 mkdir Frameworks
 cd Frameworks
-if [ ! -d audiotags.xcframework ]
+if [ ! -d ios.zip ]d
 then
-  mkdir audiotags.xcframework
-  cd audiotags.xcframework
-  mkdir ios-arm64
-  mkdir ios-arm64_x86_64-simulator
-  curl -L "#{lib_url}/Info.plist?raw=true" -o Info.plist
-  curl -L "#{lib_url}/ios-arm64/libaudiotags.a?raw=true" -o ios-arm64/libaudiotags.a
-  curl -L "#{lib_url}/ios-arm64_x86_64-simulator/libaudiotags.a?raw=true" -o ios-arm64_x86_64-simulator/libaudiotags.a
+  curl -L "#{lib_url}" -o ios.zip
+  unzip ios.zip -d 'audiotags.xcframework'
 fi
-cd ../..
+cd ..
 `
 
 Pod::Spec.new do |s|

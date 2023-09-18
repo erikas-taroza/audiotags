@@ -1,3 +1,10 @@
+libaudiotags.so
+libaudiotags.a
+audiotags.dll
+audiotags.xcframework
+*.zip
+*.tar.gz
+
 *.lock
 
 # Miscellaneous

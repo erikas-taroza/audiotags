@@ -40,12 +40,19 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
 # Download the binary from GitHub.
 set(Version "1.1.1")
-set(LibPath "${CMAKE_CURRENT_SOURCE_DIR}/libaudiotags.so")
+set(LibPath "${CMAKE_CURRENT_SOURCE_DIR}/linux.tar.gz")
 if(NOT EXISTS ${LibPath})
   file(DOWNLOAD
-    "https://github.com/erikas-taroza/audiotags/blob/v${Version}/linux/libaudiotags.so?raw=true"
+    "https://github.com/erikas-taroza/audiotags/releases/download/v${Version}/linux.tar.gz"
     ${LibPath}
     TLS_VERIFY ON
+  )
+endif()
+
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libaudiotags.so")
+  execute_process(
+    COMMAND ${CMAKE_COMMAND} -E tar -xzf linux.tar.gz
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
   )
 endif()
 

@@ -1,13 +1,14 @@
 # Download the binary from GitHub.
 version = "1.1.1"
-lib_url = "https://github.com/erikas-taroza/audiotags/blob/v#{version}/macos/Libs/libaudiotags.a?raw=true"
+lib_url = "https://github.com/erikas-taroza/audiotags/releases/download/v#{version}/macos.zip"
 
 `
 mkdir Libs
 cd Libs
-if [ ! -f libaudiotags.a ]
+if [ ! -f macos.zip ]
 then
-  curl -L "#{lib_url}" -o libaudiotags.a
+  curl -L "#{lib_url}" -o macos.zip
+  unzip macos.zip
 fi
 cd ..
 `
