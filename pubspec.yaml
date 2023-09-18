@@ -1,11 +1,11 @@
 name: audiotags
 description: Read and write audio metadata in Flutter. Supports multiple formats.
-version: 1.1.1
+version: 1.1.2
 homepage: https://github.com/erikas-taroza/audiotags
 repository: https://github.com/erikas-taroza/audiotags
 
 environment:
-  sdk: ">=2.18.1 <3.0.0"
+  sdk: ">=2.18.1 <4.0.0"
   flutter: ">=2.5.0"
 
 dependencies:
