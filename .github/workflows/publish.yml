@@ -1,0 +1,70 @@
+name: Publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build_and_upload:
+    name: Build and Upload Artifacts
+    strategy:
+      matrix:
+        include:
+          - target: linux
+            os: ubuntu-20.04
+            path: ./linux/libaudiotags.so
+          - target: android
+            os: ubuntu-latest
+            path: |
+              ./android/src/main/jniLibs/arm64-v8a/libaudiotags.so
+              ./android/src/main/jniLibs/armeabi-v7a/libaudiotags.so
+              ./android/src/main/jniLibs/x86_64/libaudiotags.so
+              ./android/src/main/jniLibs/x86/libaudiotags.so
+          - target: windows
+            os: windows-latest
+            path: ./windows/audiotags.dll
+          - target: macos
+            os: macos-latest
+            path: ./macos/Libs/libaudiotags.a
+          - target: ios
+            os: macos-latest
+            path: ./ios/Frameworks/audiotags.xcframework
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: ./.github/actions/setup_build
+      - name: Build
+        run: python ./plugin_tool.py -b ${{ matrix.target }}
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: ${{ matrix.target }}
+          path: ${{ matrix.path }}
+
+  publish_to_release:
+    name: Publish Artifacts to Release
+    needs: build_and_upload
+    runs-on: ubuntu-latest
+    steps:
+      # Downloading unzips the artifacts so they have to be rezipped.
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2.1.1
+      - name: Create Archives
+        run: |
+          tar -C linux -czvf linux.tar.gz .
+          tar -C android -czvf android.tar.gz .
+          tar -C windows -czvf windows.tar.gz .
+          zip -j macos.zip macos/*
+          cd ios && zip -r ios.zip ./* && cd .. && mv ios/ios.zip .
+      - name: Add to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            linux.tar.gz
+            android.tar.gz
+            windows.tar.gz
+            macos.zip
+            ios.zip
