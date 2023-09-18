@@ -8,7 +8,7 @@ crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
 anyhow = "1.0.68"
-flutter_rust_bridge = "1.65.0"
+flutter_rust_bridge = "=1.71.0"
 lofty = { git = "https://github.com/Serial-ATA/lofty-rs", rev = "db60766" }
 
 [profile.release]
