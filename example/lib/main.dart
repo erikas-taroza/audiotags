@@ -40,8 +40,9 @@ class _MyAppState extends State<MyApp> {
             ElevatedButton(
               child: const Text("Open"),
               onPressed: () async {
-                if (Platform.isAndroid || Platform.isIOS)
+                if (Platform.isAndroid || Platform.isIOS) {
                   await Permission.storage.request();
+                }
                 FilePickerResult? r = await FilePicker.platform.pickFiles();
                 if (r != null) path = r.files.single.path!;
               },
