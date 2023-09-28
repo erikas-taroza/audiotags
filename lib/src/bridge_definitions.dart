@@ -90,6 +90,12 @@ class Tag {
   /// The genre of the song.
   final String? genre;
 
+  /// The position of the song in a list.
+  final int? trackNumber;
+
+  /// The total amount of songs in a list.
+  final int? trackTotal;
+
   /// The duration of the song. Setting this field
   /// when writing will do nothing.
   final int? duration;
@@ -103,6 +109,8 @@ class Tag {
     this.album,
     this.year,
     this.genre,
+    this.trackNumber,
+    this.trackTotal,
     this.duration,
     required this.pictures,
   });

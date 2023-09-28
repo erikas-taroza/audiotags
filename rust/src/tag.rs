@@ -13,6 +13,10 @@ pub struct Tag {
     pub year: Option<u32>,
     /// The genre of the song.
     pub genre: Option<String>,
+    /// The position of the song in a list.
+    pub track_number: Option<u32>,
+    /// The total amount of songs in a list.
+    pub track_total: Option<u32>,
     /// The duration of the song. Setting this field
     /// when writing will do nothing.
     pub duration: Option<u32>,
@@ -28,6 +32,8 @@ impl Tag {
             && self.album.is_none()
             && self.year.is_none()
             && self.genre.is_none()
+            && self.track_number.is_none()
+            && self.track_total.is_none()
             && self.duration.is_none()
             && self.pictures.is_empty()
     }

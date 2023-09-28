@@ -91,6 +91,8 @@ impl Wire2Api<Tag> for wire_Tag {
             album: self.album.wire2api(),
             year: self.year.wire2api(),
             genre: self.genre.wire2api(),
+            track_number: self.track_number.wire2api(),
+            track_total: self.track_total.wire2api(),
             duration: self.duration.wire2api(),
             pictures: self.pictures.wire2api(),
         }
@@ -130,6 +132,8 @@ pub struct wire_Tag {
     album: *mut wire_uint_8_list,
     year: *mut u32,
     genre: *mut wire_uint_8_list,
+    track_number: *mut u32,
+    track_total: *mut u32,
     duration: *mut u32,
     pictures: *mut wire_list_picture,
 }
@@ -177,6 +181,8 @@ impl NewWithNullPtr for wire_Tag {
             album: core::ptr::null_mut(),
             year: core::ptr::null_mut(),
             genre: core::ptr::null_mut(),
+            track_number: core::ptr::null_mut(),
+            track_total: core::ptr::null_mut(),
             duration: core::ptr::null_mut(),
             pictures: core::ptr::null_mut(),
         }

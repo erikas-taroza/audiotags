@@ -223,6 +223,8 @@ impl support::IntoDart for Tag {
             self.album.into_dart(),
             self.year.into_dart(),
             self.genre.into_dart(),
+            self.track_number.into_dart(),
+            self.track_total.into_dart(),
             self.duration.into_dart(),
             self.pictures.into_into_dart().into_dart(),
         ]

@@ -44,6 +44,8 @@ pub fn read(path: String) -> anyhow::Result<Tag> {
         album: tag.get_string(&ItemKey::AlbumTitle).map(|e| e.to_string()),
         year: tag.year(),
         genre: tag.get_string(&ItemKey::Genre).map(|e| e.to_string()),
+        track_number: tag.track(),
+        track_total: tag.track_total(),
         duration: Some(duration),
         pictures,
     })
@@ -84,6 +86,16 @@ pub fn write(path: String, data: Tag) -> anyhow::Result<()> {
     // Year
     if let Some(year) = data.year {
         tag.set_year(year);
+    }
+
+    // Track number
+    if let Some(track_number) = data.track_number {
+        tag.set_track(track_number);
+    }
+
+    // Track total
+    if let Some(track_total) = data.track_total {
+        tag.set_track_total(track_total);
     }
 
     // Genre

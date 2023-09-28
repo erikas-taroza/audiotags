@@ -10,19 +10,23 @@ mod tests {
     use crate::tag::Tag;
 
     use super::*;
+    use anyhow::Context;
     use api::*;
 
-    #[test]
-    fn read_tag_mp3() {
-        let tag = read("samples/test.mp3".to_string()).expect("Could not read tag.");
+    fn read_tag_mp3() -> anyhow::Result<()> {
+        let tag = read("samples/test.mp3".to_string()).context("Could not read tag.")?;
 
         println!("{:?}", tag.title);
         println!("{:?}", tag.artist);
         println!("{:?}", tag.album);
         println!("{:?}", tag.year);
+        println!("{:?}", tag.track_number);
+        println!("{:?}", tag.track_total);
         println!("{:?}", tag.genre);
         println!("{:?}", tag.duration);
         println!("{:?}", tag.pictures);
+
+        Ok(())
     }
 
     #[test]
@@ -35,12 +39,15 @@ mod tests {
                 album: None,
                 year: None,
                 genre: None,
+                track_number: None,
+                track_total: None,
                 duration: None,
                 pictures: Vec::new(),
             },
         )
         .expect("Could not write tag.");
-        read_tag_mp3();
+
+        assert!(read_tag_mp3().is_err());
     }
 
     #[test]
@@ -72,6 +79,8 @@ mod tests {
                 artist: Some("Artist".to_string()),
                 album: Some("Album".to_string()),
                 year: Some(2022),
+                track_number: Some(1),
+                track_total: Some(2),
                 genre: Some("Genre".to_string()),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
@@ -79,20 +88,23 @@ mod tests {
         )
         .expect("Failed to write tag.");
 
-        read_tag_mp3();
+        assert!(read_tag_mp3().is_ok());
     }
 
-    #[test]
-    fn read_tag_mp4() {
-        let tag = read("samples/test.mp4".to_string()).expect("Could not read tag.");
+    fn read_tag_mp4() -> anyhow::Result<()> {
+        let tag = read("samples/test.mp4".to_string()).context("Could not read tag.")?;
 
         println!("{:?}", tag.title);
         println!("{:?}", tag.artist);
         println!("{:?}", tag.album);
         println!("{:?}", tag.year);
+        println!("{:?}", tag.track_number);
+        println!("{:?}", tag.track_total);
         println!("{:?}", tag.genre);
         println!("{:?}", tag.duration);
         println!("{:?}", tag.pictures);
+
+        Ok(())
     }
 
     #[test]
@@ -105,12 +117,15 @@ mod tests {
                 album: None,
                 year: None,
                 genre: None,
+                track_number: None,
+                track_total: None,
                 duration: None,
                 pictures: Vec::new(),
             },
         )
         .expect("Could not write tag.");
-        read_tag_mp4();
+
+        assert!(read_tag_mp4().is_err());
     }
 
     #[test]
@@ -142,6 +157,8 @@ mod tests {
                 artist: Some("Artist".to_string()),
                 album: Some("Album".to_string()),
                 year: Some(2022),
+                track_number: Some(1),
+                track_total: Some(2),
                 genre: Some("Genre".to_string()),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
@@ -149,6 +166,6 @@ mod tests {
         )
         .expect("Failed to write tag.");
 
-        read_tag_mp4();
+        assert!(read_tag_mp4().is_ok());
     }
 }

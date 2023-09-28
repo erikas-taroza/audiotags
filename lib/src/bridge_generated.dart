@@ -117,16 +117,18 @@ class AudiotagsImpl implements Audiotags {
 
   Tag _wire2api_tag(dynamic raw) {
     final arr = raw as List<dynamic>;
-    if (arr.length != 7)
-      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    if (arr.length != 9)
+      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
     return Tag(
       title: _wire2api_opt_String(arr[0]),
       artist: _wire2api_opt_String(arr[1]),
       album: _wire2api_opt_String(arr[2]),
       year: _wire2api_opt_box_autoadd_u32(arr[3]),
       genre: _wire2api_opt_String(arr[4]),
-      duration: _wire2api_opt_box_autoadd_u32(arr[5]),
-      pictures: _wire2api_list_picture(arr[6]),
+      trackNumber: _wire2api_opt_box_autoadd_u32(arr[5]),
+      trackTotal: _wire2api_opt_box_autoadd_u32(arr[6]),
+      duration: _wire2api_opt_box_autoadd_u32(arr[7]),
+      pictures: _wire2api_list_picture(arr[8]),
     );
   }
 
@@ -244,6 +246,8 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
     wireObj.album = api2wire_opt_String(apiObj.album);
     wireObj.year = api2wire_opt_box_autoadd_u32(apiObj.year);
     wireObj.genre = api2wire_opt_String(apiObj.genre);
+    wireObj.track_number = api2wire_opt_box_autoadd_u32(apiObj.trackNumber);
+    wireObj.track_total = api2wire_opt_box_autoadd_u32(apiObj.trackTotal);
     wireObj.duration = api2wire_opt_box_autoadd_u32(apiObj.duration);
     wireObj.pictures = api2wire_list_picture(apiObj.pictures);
   }
@@ -487,6 +491,10 @@ final class wire_Tag extends ffi.Struct {
   external ffi.Pointer<ffi.Uint32> year;
 
   external ffi.Pointer<wire_uint_8_list> genre;
+
+  external ffi.Pointer<ffi.Uint32> track_number;
+
+  external ffi.Pointer<ffi.Uint32> track_total;
 
   external ffi.Pointer<ffi.Uint32> duration;
 
