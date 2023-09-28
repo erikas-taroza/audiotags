@@ -14,6 +14,7 @@ if(NOT EXISTS ${ArchivePath})
 endif()
 
 if(NOT EXISTS "${LibPath}/arm64-v8a/libaudiotags.so")
+  file(MAKE_DIRECTORY ${LibPath})
   execute_process(
     COMMAND ${CMAKE_COMMAND} -E tar -xzf ${ArchivePath}
     WORKING_DIRECTORY ${LibPath}
