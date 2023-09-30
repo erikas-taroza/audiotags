@@ -1,4 +1,4 @@
-use crate::{picture::Picture, tag::Tag};
+use crate::tag::Tag;
 use anyhow::anyhow;
 use lofty::{Accessor, AudioFile, ItemKey, Probe, TagExt, TaggedFile, TaggedFileExt};
 
@@ -24,31 +24,11 @@ pub fn read(path: String) -> anyhow::Result<Tag> {
         },
     }?;
 
+    let mut tag = Tag::from(tag);
     let duration = file.properties().duration().as_secs() as u32;
+    tag.duration = Some(duration);
 
-    let pictures = tag
-        .pictures()
-        .iter()
-        .map(|picture| {
-            Picture::new(
-                picture.pic_type().into(),
-                picture.mime_type().clone().into(),
-                picture.data().to_vec(),
-            )
-        })
-        .collect::<Vec<Picture>>();
-
-    Ok(Tag {
-        title: tag.get_string(&ItemKey::TrackTitle).map(|e| e.to_string()),
-        artist: tag.get_string(&ItemKey::TrackArtist).map(|e| e.to_string()),
-        album: tag.get_string(&ItemKey::AlbumTitle).map(|e| e.to_string()),
-        year: tag.year(),
-        genre: tag.get_string(&ItemKey::Genre).map(|e| e.to_string()),
-        track_number: tag.track(),
-        track_total: tag.track_total(),
-        duration: Some(duration),
-        pictures,
-    })
+    Ok(tag)
 }
 
 pub fn write(path: String, data: Tag) -> anyhow::Result<()> {

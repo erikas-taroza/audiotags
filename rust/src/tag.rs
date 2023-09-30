@@ -1,3 +1,5 @@
+use lofty::{Accessor, ItemKey};
+
 use crate::picture::Picture;
 
 /// Represents the metadata of the file.
@@ -36,5 +38,33 @@ impl Tag {
             && self.track_total.is_none()
             && self.duration.is_none()
             && self.pictures.is_empty()
+    }
+}
+
+impl From<&lofty::Tag> for Tag {
+    fn from(tag: &lofty::Tag) -> Self {
+        let pictures = tag
+            .pictures()
+            .iter()
+            .map(|picture| {
+                Picture::new(
+                    picture.pic_type().into(),
+                    picture.mime_type().clone().into(),
+                    picture.data().to_vec(),
+                )
+            })
+            .collect::<Vec<Picture>>();
+
+        Tag {
+            title: tag.get_string(&ItemKey::TrackTitle).map(|e| e.to_string()),
+            artist: tag.get_string(&ItemKey::TrackArtist).map(|e| e.to_string()),
+            album: tag.get_string(&ItemKey::AlbumTitle).map(|e| e.to_string()),
+            year: tag.year(),
+            genre: tag.get_string(&ItemKey::Genre).map(|e| e.to_string()),
+            track_number: tag.track(),
+            track_total: tag.track_total(),
+            pictures,
+            duration: None,
+        }
     }
 }
