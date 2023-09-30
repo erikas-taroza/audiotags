@@ -7,9 +7,9 @@ fn get_file(path: &str) -> anyhow::Result<TaggedFile> {
     match Probe::open(path) {
         Ok(file) => match file.read() {
             Ok(file) => Ok(file),
-            Err(_) => Err(anyhow!("ERR: Failed to read metadata of file.")),
+            Err(err) => Err(anyhow!("Failed to read metadata of file. {err:?}")),
         },
-        Err(_) => Err(anyhow!("ERR: Invalid path provided.")),
+        Err(err) => Err(anyhow!("Invalid path provided. {err:?}")),
     }
 }
 
@@ -20,7 +20,7 @@ pub fn read(path: String) -> anyhow::Result<Tag> {
         Some(primary_tag) => Ok(primary_tag),
         None => match file.first_tag() {
             Some(first_tag) => Ok(first_tag),
-            None => Err(anyhow!("ERR: This file does not have any tags.")),
+            None => Err(anyhow!("This file does not have any tags.")),
         },
     }?;
 
@@ -118,6 +118,6 @@ pub fn write(path: String, data: Tag) -> anyhow::Result<()> {
 
     match tag.save_to_path(path) {
         Ok(_) => Ok(()),
-        Err(_) => Err(anyhow!("ERR: Failed to write tag to file.")),
+        Err(err) => Err(anyhow!("Failed to write tag to file. {err:?}")),
     }
 }
