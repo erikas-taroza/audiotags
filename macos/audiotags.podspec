@@ -1,5 +1,5 @@
 # Download the binary from GitHub.
-version = "1.1.3"
+version = "1.2.0"
 lib_url = "https://github.com/erikas-taroza/audiotags/releases/download/v#{version}/macos.zip"
 
 `
@@ -15,7 +15,7 @@ cd ..
 
 Pod::Spec.new do |s|
   s.name             = 'audiotags'
-  s.version          = '1.1.3'
+  s.version          = '1.2.0'
   s.summary          = 'A new Flutter plugin project.'
   s.description      = <<-DESC
 A new Flutter plugin project.

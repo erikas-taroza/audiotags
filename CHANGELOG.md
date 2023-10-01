@@ -1,3 +1,10 @@
+## 1.2.0
+
+- Add custom errors.
+- Add support for `trackNumber` and `trackTotal` metadata.
+- Fix Android libraries not being extracted during build.
+- Update `lofty` dependency.
+
 ## 1.1.3
 
 - Update `flutter_rust_bridge` version.
