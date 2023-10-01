@@ -36,6 +36,11 @@ jobs:
           cd rust
           cargo +nightly clippy 
           cd ..
+      - name: Run Tests
+        run: |
+          cd rust
+          cargo test
+          cd ..
 
   dart_lint:
     name: Dart Lint
