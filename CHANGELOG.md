@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Update `.pubignore`
+
 ## 1.2.0
 
 - Add custom errors.
