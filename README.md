@@ -8,6 +8,7 @@ Read and write audio metadata in Flutter. Supports multiple formats.
 
 ```dart
 Tag? tag = await AudioTags.read(path);
+
 String? title = tag?.title;
 String? artist = tag?.artist;
 String? album = tag?.album;
@@ -38,6 +39,7 @@ Tag tag = Tag(
         )
     ]
 );
+
 AudioTags.write(path, tag);
 ```
 
