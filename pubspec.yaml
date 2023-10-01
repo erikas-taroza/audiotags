@@ -16,12 +16,15 @@ dependencies:
   flutter_rust_bridge: ^1.82.1
   meta: ^1.8.0
   uuid: any
+  freezed_annotation: ^2.4.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
   ffigen: ^9.0.1
+  build_runner: ^2.4.6
+  freezed: ^2.4.2
 
 flutter:
   plugin:

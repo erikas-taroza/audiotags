@@ -1,26 +1,27 @@
-use crate::tag::Tag;
-use anyhow::anyhow;
+use crate::{error::AudioTagsError, tag::Tag};
 use lofty::{Accessor, AudioFile, ItemKey, Probe, TagExt, TaggedFile, TaggedFileExt};
 
 /// Returns a `TaggedFile` at the given path.
-fn get_file(path: &str) -> anyhow::Result<TaggedFile> {
+fn get_file(path: &str) -> Result<TaggedFile, AudioTagsError> {
     match Probe::open(path) {
         Ok(file) => match file.read() {
             Ok(file) => Ok(file),
-            Err(err) => Err(anyhow!("Failed to read metadata of file. {err:?}")),
+            Err(err) => Err(AudioTagsError::OpenFile {
+                message: err.to_string(),
+            }),
         },
-        Err(err) => Err(anyhow!("Invalid path provided. {err:?}")),
+        Err(_) => Err(AudioTagsError::InvalidPath),
     }
 }
 
-pub fn read(path: String) -> anyhow::Result<Tag> {
+pub fn read(path: String) -> Result<Tag, AudioTagsError> {
     let file = get_file(&path)?;
 
     let tag = match file.primary_tag() {
         Some(primary_tag) => Ok(primary_tag),
         None => match file.first_tag() {
             Some(first_tag) => Ok(first_tag),
-            None => Err(anyhow!("This file does not have any tags.")),
+            None => Err(AudioTagsError::NoTags),
         },
     }?;
 
@@ -31,12 +32,16 @@ pub fn read(path: String) -> anyhow::Result<Tag> {
     Ok(tag)
 }
 
-pub fn write(path: String, data: Tag) -> anyhow::Result<()> {
+pub fn write(path: String, data: Tag) -> Result<(), AudioTagsError> {
     let mut file = get_file(&path)?;
 
     // Remove the existing tags.
     for tag in file.tags() {
-        tag.remove_from_path(&path)?;
+        if let Err(err) = tag.remove_from_path(&path) {
+            return Err(AudioTagsError::Write {
+                message: format!("Could not remove existing tag. {err:?}"),
+            });
+        }
     }
 
     // If there is no data to be written, then return.
@@ -98,6 +103,8 @@ pub fn write(path: String, data: Tag) -> anyhow::Result<()> {
 
     match tag.save_to_path(path) {
         Ok(_) => Ok(()),
-        Err(err) => Err(anyhow!("Failed to write tag to file. {err:?}")),
+        Err(err) => Err(AudioTagsError::Write {
+            message: format!("Failed to write tag to file. {err:?}"),
+        }),
     }
 }

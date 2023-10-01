@@ -7,6 +7,9 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:uuid/uuid.dart';
+import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
+
+part 'bridge_definitions.freezed.dart';
 
 abstract class Audiotags {
   Future<Tag> read({required String path, dynamic hint});
@@ -16,6 +19,18 @@ abstract class Audiotags {
   Future<void> write({required String path, required Tag data, dynamic hint});
 
   FlutterRustBridgeTaskConstMeta get kWriteConstMeta;
+}
+
+@freezed
+sealed class AudioTagsError with _$AudioTagsError implements FrbException {
+  const factory AudioTagsError.invalidPath() = AudioTagsError_InvalidPath;
+  const factory AudioTagsError.noTags() = AudioTagsError_NoTags;
+  const factory AudioTagsError.openFile({
+    required String message,
+  }) = AudioTagsError_OpenFile;
+  const factory AudioTagsError.write({
+    required String message,
+  }) = AudioTagsError_Write;
 }
 
 /// The MIME type of the picture.

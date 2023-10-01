@@ -20,6 +20,7 @@ use std::sync::Arc;
 
 // Section: imports
 
+use crate::error::AudioTagsError;
 use crate::picture::MimeType;
 use crate::picture::Picture;
 use crate::picture::PictureType;
@@ -142,6 +143,24 @@ impl Wire2Api<u8> for u8 {
 }
 
 // Section: impl IntoDart
+
+impl support::IntoDart for AudioTagsError {
+    fn into_dart(self) -> support::DartAbi {
+        match self {
+            Self::InvalidPath => vec![0.into_dart()],
+            Self::NoTags => vec![1.into_dart()],
+            Self::OpenFile { message } => vec![2.into_dart(), message.into_into_dart().into_dart()],
+            Self::Write { message } => vec![3.into_dart(), message.into_into_dart().into_dart()],
+        }
+        .into_dart()
+    }
+}
+impl support::IntoDartExceptPrimitive for AudioTagsError {}
+impl rust2dart::IntoIntoDart<AudioTagsError> for AudioTagsError {
+    fn into_into_dart(self) -> Self {
+        self
+    }
+}
 
 impl support::IntoDart for MimeType {
     fn into_dart(self) -> support::DartAbi {

@@ -31,7 +31,7 @@ class AudiotagsImpl implements Audiotags {
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_read(port_, arg0),
       parseSuccessData: _wire2api_tag,
-      parseErrorData: _wire2api_FrbAnyhowException,
+      parseErrorData: _wire2api_audio_tags_error,
       constMeta: kReadConstMeta,
       argValues: [path],
       hint: hint,
@@ -50,7 +50,7 @@ class AudiotagsImpl implements Audiotags {
     return _platform.executeNormal(FlutterRustBridgeTask(
       callFfi: (port_) => _platform.inner.wire_write(port_, arg0, arg1),
       parseSuccessData: _wire2api_unit,
-      parseErrorData: _wire2api_FrbAnyhowException,
+      parseErrorData: _wire2api_audio_tags_error,
       constMeta: kWriteConstMeta,
       argValues: [path, data],
       hint: hint,
@@ -68,12 +68,27 @@ class AudiotagsImpl implements Audiotags {
   }
 // Section: wire2api
 
-  FrbAnyhowException _wire2api_FrbAnyhowException(dynamic raw) {
-    return FrbAnyhowException(raw as String);
-  }
-
   String _wire2api_String(dynamic raw) {
     return raw as String;
+  }
+
+  AudioTagsError _wire2api_audio_tags_error(dynamic raw) {
+    switch (raw[0]) {
+      case 0:
+        return AudioTagsError_InvalidPath();
+      case 1:
+        return AudioTagsError_NoTags();
+      case 2:
+        return AudioTagsError_OpenFile(
+          message: _wire2api_String(raw[1]),
+        );
+      case 3:
+        return AudioTagsError_Write(
+          message: _wire2api_String(raw[1]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
   }
 
   int _wire2api_box_autoadd_u32(dynamic raw) {

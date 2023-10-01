@@ -7,9 +7,11 @@ edition = "2021"
 crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
-anyhow = "1.0.68"
 flutter_rust_bridge = "=1.82.1"
 lofty = "0.16.0"
+
+[dev-dependencies]
+anyhow = "1.0.68"
 
 [profile.release]
 lto = true
