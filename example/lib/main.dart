@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Audiotags Example'),
+          title: const Text('AudioTags Example'),
         ),
         body: Center(
             child: Column(
@@ -57,6 +57,8 @@ class _MyAppState extends State<MyApp> {
                     album: "Album",
                     genre: "Genre",
                     year: 2000,
+                    trackNumber: 1,
+                    trackTotal: 2,
                     pictures: [
                       Picture(
                           bytes: Uint8List.fromList([0, 0, 0, 0]),
@@ -76,6 +78,8 @@ class _MyAppState extends State<MyApp> {
                 String? album = tag?.album;
                 String? genre = tag?.genre;
                 int? year = tag?.year;
+                int? trackNumber = tag?.trackNumber;
+                int? trackTotal = tag?.trackTotal;
                 int? duration = tag?.duration;
                 List<Picture>? pictures = tag?.pictures;
 
@@ -84,6 +88,8 @@ class _MyAppState extends State<MyApp> {
                 debugPrint("Album: $album");
                 debugPrint("Genre: $genre");
                 debugPrint("Year: ${year.toString()}");
+                debugPrint("Track Number: ${trackNumber.toString()}");
+                debugPrint("Track Total: ${trackTotal.toString()}");
                 debugPrint("Duration: ${duration.toString()}");
                 debugPrint("Pictures: $pictures");
               },
