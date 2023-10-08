@@ -21,6 +21,10 @@ pub struct Tag {
     pub track_number: Option<u32>,
     /// The total amount of songs in a list.
     pub track_total: Option<u32>,
+    /// The position of the disc in a list.
+    pub disc_number: Option<u32>,
+    /// The total amount of discs in a list.
+    pub disc_total: Option<u32>,
     /// The duration of the song. Setting this field
     /// when writing will do nothing.
     pub duration: Option<u32>,
@@ -39,6 +43,8 @@ impl Tag {
             && self.genre.is_none()
             && self.track_number.is_none()
             && self.track_total.is_none()
+            && self.disc_number.is_none()
+            && self.disc_total.is_none()
             && self.duration.is_none()
             && self.pictures.is_empty()
     }
@@ -67,6 +73,8 @@ impl From<&lofty::Tag> for Tag {
             genre: tag.get_string(&ItemKey::Genre).map(|e| e.to_string()),
             track_number: tag.track(),
             track_total: tag.track_total(),
+            disc_number: tag.disk(),
+            disc_total: tag.disk_total(),
             pictures,
             duration: None,
         }

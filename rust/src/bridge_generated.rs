@@ -245,6 +245,8 @@ impl support::IntoDart for Tag {
             self.genre.into_dart(),
             self.track_number.into_dart(),
             self.track_total.into_dart(),
+            self.disc_number.into_dart(),
+            self.disc_total.into_dart(),
             self.duration.into_dart(),
             self.pictures.into_into_dart().into_dart(),
         ]

@@ -34,6 +34,8 @@ typedef struct wire_Tag {
   struct wire_uint_8_list *genre;
   uint32_t *track_number;
   uint32_t *track_total;
+  uint32_t *disc_number;
+  uint32_t *disc_total;
   uint32_t *duration;
   struct wire_list_picture *pictures;
 } wire_Tag;

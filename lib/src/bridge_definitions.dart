@@ -114,6 +114,12 @@ class Tag {
   /// The total amount of songs in a list.
   final int? trackTotal;
 
+  /// The position of the disc in a list.
+  final int? discNumber;
+
+  /// The total amount of discs in a list.
+  final int? discTotal;
+
   /// The duration of the song. Setting this field
   /// when writing will do nothing.
   final int? duration;
@@ -130,6 +136,8 @@ class Tag {
     this.genre,
     this.trackNumber,
     this.trackTotal,
+    this.discNumber,
+    this.discTotal,
     this.duration,
     required this.pictures,
   });

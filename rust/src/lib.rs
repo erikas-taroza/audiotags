@@ -24,6 +24,8 @@ mod tests {
         println!("{:?}", tag.year);
         println!("{:?}", tag.track_number);
         println!("{:?}", tag.track_total);
+        println!("{:?}", tag.disc_number);
+        println!("{:?}", tag.dsic_total);
         println!("{:?}", tag.genre);
         println!("{:?}", tag.duration);
         println!("{:?}", tag.pictures);
@@ -44,6 +46,8 @@ mod tests {
                 genre: None,
                 track_number: None,
                 track_total: None,
+                disc_number: None,
+                disc_total: None,
                 duration: None,
                 pictures: Vec::new(),
             },
@@ -85,6 +89,8 @@ mod tests {
                 year: Some(2022),
                 track_number: Some(1),
                 track_total: Some(2),
+                disc_number: Some(1),
+                disc_total: Some(3),
                 genre: Some("Genre".to_string()),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
@@ -105,6 +111,8 @@ mod tests {
         println!("{:?}", tag.year);
         println!("{:?}", tag.track_number);
         println!("{:?}", tag.track_total);
+        println!("{:?}", tag.disc_number);
+        println!("{:?}", tag.disc_total);
         println!("{:?}", tag.genre);
         println!("{:?}", tag.duration);
         println!("{:?}", tag.pictures);
@@ -125,6 +133,8 @@ mod tests {
                 genre: None,
                 track_number: None,
                 track_total: None,
+                disc_number: None,
+                disc_total: None,
                 duration: None,
                 pictures: Vec::new(),
             },
@@ -166,6 +176,8 @@ mod tests {
                 year: Some(2022),
                 track_number: Some(1),
                 track_total: Some(2),
+                disc_number: Some(1),
+                disc_total: Some(3),
                 genre: Some("Genre".to_string()),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
