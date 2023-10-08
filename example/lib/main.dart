@@ -53,8 +53,9 @@ class _MyAppState extends State<MyApp> {
               onPressed: () async {
                 Tag tag = Tag(
                     title: "Title",
-                    artist: "Artist",
+                    trackArtist: "Track Artist",
                     album: "Album",
+                    albumArtist: "AlbumArtist",
                     genre: "Genre",
                     year: 2000,
                     trackNumber: 1,
@@ -74,8 +75,9 @@ class _MyAppState extends State<MyApp> {
               onPressed: () async {
                 Tag? tag = await AudioTags.read(path);
                 String? title = tag?.title;
-                String? artist = tag?.artist;
+                String? trackArtist = tag?.trackArtist;
                 String? album = tag?.album;
+                String? albumArtist = tag?.albumArtist;
                 String? genre = tag?.genre;
                 int? year = tag?.year;
                 int? trackNumber = tag?.trackNumber;
@@ -84,8 +86,9 @@ class _MyAppState extends State<MyApp> {
                 List<Picture>? pictures = tag?.pictures;
 
                 debugPrint("Title: $title");
-                debugPrint("Artist: $artist");
+                debugPrint("Track Artist: $trackArtist");
                 debugPrint("Album: $album");
+                debugPrint("Album Artist: $albumArtist");
                 debugPrint("Genre: $genre");
                 debugPrint("Year: ${year.toString()}");
                 debugPrint("Track Number: ${trackNumber.toString()}");

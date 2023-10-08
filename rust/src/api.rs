@@ -58,14 +58,19 @@ pub fn write(path: String, data: Tag) -> Result<(), AudioTagsError> {
         tag.insert_text(ItemKey::TrackTitle, title);
     }
 
-    // Artist
-    if let Some(artist) = data.artist {
-        tag.insert_text(ItemKey::TrackArtist, artist);
+    // Track Artist
+    if let Some(track_artist) = data.track_artist {
+        tag.insert_text(ItemKey::TrackArtist, track_artist);
     }
 
     // Album Title
     if let Some(album) = data.album {
         tag.insert_text(ItemKey::AlbumTitle, album);
+    }
+
+    // Album Artist
+    if let Some(album_artist) = data.album_artist {
+        tag.insert_text(ItemKey::AlbumArtist, album_artist);
     }
 
     // Year

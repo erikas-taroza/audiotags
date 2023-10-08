@@ -87,8 +87,9 @@ impl Wire2Api<Tag> for wire_Tag {
     fn wire2api(self) -> Tag {
         Tag {
             title: self.title.wire2api(),
-            artist: self.artist.wire2api(),
+            track_artist: self.track_artist.wire2api(),
             album: self.album.wire2api(),
+            album_artist: self.album_artist.wire2api(),
             year: self.year.wire2api(),
             genre: self.genre.wire2api(),
             track_number: self.track_number.wire2api(),
@@ -128,8 +129,9 @@ pub struct wire_Picture {
 #[derive(Clone)]
 pub struct wire_Tag {
     title: *mut wire_uint_8_list,
-    artist: *mut wire_uint_8_list,
+    track_artist: *mut wire_uint_8_list,
     album: *mut wire_uint_8_list,
+    album_artist: *mut wire_uint_8_list,
     year: *mut u32,
     genre: *mut wire_uint_8_list,
     track_number: *mut u32,
@@ -177,8 +179,9 @@ impl NewWithNullPtr for wire_Tag {
     fn new_with_null_ptr() -> Self {
         Self {
             title: core::ptr::null_mut(),
-            artist: core::ptr::null_mut(),
+            track_artist: core::ptr::null_mut(),
             album: core::ptr::null_mut(),
+            album_artist: core::ptr::null_mut(),
             year: core::ptr::null_mut(),
             genre: core::ptr::null_mut(),
             track_number: core::ptr::null_mut(),

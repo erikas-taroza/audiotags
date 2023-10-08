@@ -94,10 +94,13 @@ class Tag {
   final String? title;
 
   /// The artist of the song.
-  final String? artist;
+  final String? trackArtist;
 
   /// The album the song is from.
   final String? album;
+
+  /// The artist of the album.
+  final String? albumArtist;
 
   /// The year that this song was made.
   final int? year;
@@ -120,8 +123,9 @@ class Tag {
 
   const Tag({
     this.title,
-    this.artist,
+    this.trackArtist,
     this.album,
+    this.albumArtist,
     this.year,
     this.genre,
     this.trackNumber,

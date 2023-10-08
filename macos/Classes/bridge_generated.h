@@ -27,8 +27,9 @@ typedef struct wire_list_picture {
 
 typedef struct wire_Tag {
   struct wire_uint_8_list *title;
-  struct wire_uint_8_list *artist;
+  struct wire_uint_8_list *track_artist;
   struct wire_uint_8_list *album;
+  struct wire_uint_8_list *album_artist;
   uint32_t *year;
   struct wire_uint_8_list *genre;
   uint32_t *track_number;

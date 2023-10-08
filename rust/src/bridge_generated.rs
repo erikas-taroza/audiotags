@@ -238,8 +238,9 @@ impl support::IntoDart for Tag {
     fn into_dart(self) -> support::DartAbi {
         vec![
             self.title.into_dart(),
-            self.artist.into_dart(),
+            self.track_artist.into_dart(),
             self.album.into_dart(),
+            self.album_artist.into_dart(),
             self.year.into_dart(),
             self.genre.into_dart(),
             self.track_number.into_dart(),

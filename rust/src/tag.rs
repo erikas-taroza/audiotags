@@ -8,9 +8,11 @@ pub struct Tag {
     /// The title of the song.
     pub title: Option<String>,
     /// The artist of the song.
-    pub artist: Option<String>,
+    pub track_artist: Option<String>,
     /// The album the song is from.
     pub album: Option<String>,
+    /// The artist of the album.
+    pub album_artist: Option<String>,
     /// The year that this song was made.
     pub year: Option<u32>,
     /// The genre of the song.
@@ -30,8 +32,9 @@ impl Tag {
     /// Returns `true` if the tag has no data.
     pub fn is_empty(&self) -> bool {
         self.title.is_none()
-            && self.artist.is_none()
+            && self.track_artist.is_none()
             && self.album.is_none()
+            && self.album_artist.is_none()
             && self.year.is_none()
             && self.genre.is_none()
             && self.track_number.is_none()
@@ -57,8 +60,9 @@ impl From<&lofty::Tag> for Tag {
 
         Tag {
             title: tag.get_string(&ItemKey::TrackTitle).map(|e| e.to_string()),
-            artist: tag.get_string(&ItemKey::TrackArtist).map(|e| e.to_string()),
+            track_artist: tag.get_string(&ItemKey::TrackArtist).map(|e| e.to_string()),
             album: tag.get_string(&ItemKey::AlbumTitle).map(|e| e.to_string()),
+            album_artist: tag.get_string(&ItemKey::AlbumArtist).map(|e| e.to_string()),
             year: tag.year(),
             genre: tag.get_string(&ItemKey::Genre).map(|e| e.to_string()),
             track_number: tag.track(),
