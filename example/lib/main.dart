@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
                     title: "Title",
                     trackArtist: "Track Artist",
                     album: "Album",
-                    albumArtist: "AlbumArtist",
+                    albumArtist: "Album Artist",
                     genre: "Genre",
                     year: 2000,
                     trackNumber: 1,
