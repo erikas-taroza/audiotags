@@ -8,9 +8,11 @@ pub struct Tag {
     /// The title of the song.
     pub title: Option<String>,
     /// The artist of the song.
-    pub artist: Option<String>,
+    pub track_artist: Option<String>,
     /// The album the song is from.
     pub album: Option<String>,
+    /// The artist of the album.
+    pub album_artist: Option<String>,
     /// The year that this song was made.
     pub year: Option<u32>,
     /// The genre of the song.
@@ -19,6 +21,10 @@ pub struct Tag {
     pub track_number: Option<u32>,
     /// The total amount of songs in a list.
     pub track_total: Option<u32>,
+    /// The position of the disc in a list.
+    pub disc_number: Option<u32>,
+    /// The total amount of discs in a list.
+    pub disc_total: Option<u32>,
     /// The duration of the song. Setting this field
     /// when writing will do nothing.
     pub duration: Option<u32>,
@@ -30,12 +36,15 @@ impl Tag {
     /// Returns `true` if the tag has no data.
     pub fn is_empty(&self) -> bool {
         self.title.is_none()
-            && self.artist.is_none()
+            && self.track_artist.is_none()
             && self.album.is_none()
+            && self.album_artist.is_none()
             && self.year.is_none()
             && self.genre.is_none()
             && self.track_number.is_none()
             && self.track_total.is_none()
+            && self.disc_number.is_none()
+            && self.disc_total.is_none()
             && self.duration.is_none()
             && self.pictures.is_empty()
     }
@@ -57,12 +66,15 @@ impl From<&lofty::Tag> for Tag {
 
         Tag {
             title: tag.get_string(&ItemKey::TrackTitle).map(|e| e.to_string()),
-            artist: tag.get_string(&ItemKey::TrackArtist).map(|e| e.to_string()),
+            track_artist: tag.get_string(&ItemKey::TrackArtist).map(|e| e.to_string()),
             album: tag.get_string(&ItemKey::AlbumTitle).map(|e| e.to_string()),
+            album_artist: tag.get_string(&ItemKey::AlbumArtist).map(|e| e.to_string()),
             year: tag.year(),
             genre: tag.get_string(&ItemKey::Genre).map(|e| e.to_string()),
             track_number: tag.track(),
             track_total: tag.track_total(),
+            disc_number: tag.disk(),
+            disc_total: tag.disk_total(),
             pictures,
             duration: None,
         }

@@ -18,11 +18,14 @@ mod tests {
         let tag = read("samples/test.mp3".to_string()).context("Could not read tag.")?;
 
         println!("{:?}", tag.title);
-        println!("{:?}", tag.artist);
+        println!("{:?}", tag.track_artist);
         println!("{:?}", tag.album);
+        println!("{:?}", tag.album_artist);
         println!("{:?}", tag.year);
         println!("{:?}", tag.track_number);
         println!("{:?}", tag.track_total);
+        println!("{:?}", tag.disc_number);
+        println!("{:?}", tag.disc_total);
         println!("{:?}", tag.genre);
         println!("{:?}", tag.duration);
         println!("{:?}", tag.pictures);
@@ -36,12 +39,15 @@ mod tests {
             "samples/test.mp3".to_string(),
             Tag {
                 title: None,
-                artist: None,
+                track_artist: None,
                 album: None,
+                album_artist: None,
                 year: None,
                 genre: None,
                 track_number: None,
                 track_total: None,
+                disc_number: None,
+                disc_total: None,
                 duration: None,
                 pictures: Vec::new(),
             },
@@ -77,11 +83,14 @@ mod tests {
             "samples/test.mp3".to_string(),
             Tag {
                 title: Some("Title".to_string()),
-                artist: Some("Artist".to_string()),
+                track_artist: Some("Track Artist".to_string()),
                 album: Some("Album".to_string()),
+                album_artist: Some("Album Artist".to_string()),
                 year: Some(2022),
                 track_number: Some(1),
                 track_total: Some(2),
+                disc_number: Some(1),
+                disc_total: Some(3),
                 genre: Some("Genre".to_string()),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
@@ -96,11 +105,14 @@ mod tests {
         let tag = read("samples/test.mp4".to_string()).context("Could not read tag.")?;
 
         println!("{:?}", tag.title);
-        println!("{:?}", tag.artist);
+        println!("{:?}", tag.track_artist);
         println!("{:?}", tag.album);
+        println!("{:?}", tag.album_artist);
         println!("{:?}", tag.year);
         println!("{:?}", tag.track_number);
         println!("{:?}", tag.track_total);
+        println!("{:?}", tag.disc_number);
+        println!("{:?}", tag.disc_total);
         println!("{:?}", tag.genre);
         println!("{:?}", tag.duration);
         println!("{:?}", tag.pictures);
@@ -114,12 +126,15 @@ mod tests {
             "samples/test.mp4".to_string(),
             Tag {
                 title: None,
-                artist: None,
+                track_artist: None,
                 album: None,
+                album_artist: None,
                 year: None,
                 genre: None,
                 track_number: None,
                 track_total: None,
+                disc_number: None,
+                disc_total: None,
                 duration: None,
                 pictures: Vec::new(),
             },
@@ -155,11 +170,14 @@ mod tests {
             "samples/test.mp4".to_string(),
             Tag {
                 title: Some("Title".to_string()),
-                artist: Some("Artist".to_string()),
+                track_artist: Some("Track Artist".to_string()),
                 album: Some("Album".to_string()),
+                album_artist: Some("Album Artist".to_string()),
                 year: Some(2022),
                 track_number: Some(1),
                 track_total: Some(2),
+                disc_number: Some(1),
+                disc_total: Some(3),
                 genre: Some("Genre".to_string()),
                 pictures: vec![picture1, picture2],
                 ..Default::default()

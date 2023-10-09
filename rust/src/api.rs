@@ -58,14 +58,19 @@ pub fn write(path: String, data: Tag) -> Result<(), AudioTagsError> {
         tag.insert_text(ItemKey::TrackTitle, title);
     }
 
-    // Artist
-    if let Some(artist) = data.artist {
-        tag.insert_text(ItemKey::TrackArtist, artist);
+    // Track Artist
+    if let Some(track_artist) = data.track_artist {
+        tag.insert_text(ItemKey::TrackArtist, track_artist);
     }
 
     // Album Title
     if let Some(album) = data.album {
         tag.insert_text(ItemKey::AlbumTitle, album);
+    }
+
+    // Album Artist
+    if let Some(album_artist) = data.album_artist {
+        tag.insert_text(ItemKey::AlbumArtist, album_artist);
     }
 
     // Year
@@ -81,6 +86,16 @@ pub fn write(path: String, data: Tag) -> Result<(), AudioTagsError> {
     // Track total
     if let Some(track_total) = data.track_total {
         tag.set_track_total(track_total);
+    }
+    
+    // Disc number
+    if let Some(disc_number) = data.disc_number {
+        tag.set_disk(disc_number);
+    }
+
+    // Disc total
+    if let Some(disc_total) = data.disc_total {
+        tag.set_disk_total(disc_total);
     }
 
     // Genre

@@ -53,12 +53,15 @@ class _MyAppState extends State<MyApp> {
               onPressed: () async {
                 Tag tag = Tag(
                     title: "Title",
-                    artist: "Artist",
+                    trackArtist: "Track Artist",
                     album: "Album",
+                    albumArtist: "Album Artist",
                     genre: "Genre",
                     year: 2000,
                     trackNumber: 1,
                     trackTotal: 2,
+                    discNumber: 1,
+                    discTotal: 3,
                     pictures: [
                       Picture(
                           bytes: Uint8List.fromList([0, 0, 0, 0]),
@@ -74,22 +77,28 @@ class _MyAppState extends State<MyApp> {
               onPressed: () async {
                 Tag? tag = await AudioTags.read(path);
                 String? title = tag?.title;
-                String? artist = tag?.artist;
+                String? trackArtist = tag?.trackArtist;
                 String? album = tag?.album;
+                String? albumArtist = tag?.albumArtist;
                 String? genre = tag?.genre;
                 int? year = tag?.year;
                 int? trackNumber = tag?.trackNumber;
                 int? trackTotal = tag?.trackTotal;
+                int? discNumber = tag?.discNumber;
+                int? discTotal = tag?.discTotal;
                 int? duration = tag?.duration;
                 List<Picture>? pictures = tag?.pictures;
 
                 debugPrint("Title: $title");
-                debugPrint("Artist: $artist");
+                debugPrint("Track Artist: $trackArtist");
                 debugPrint("Album: $album");
+                debugPrint("Album Artist: $albumArtist");
                 debugPrint("Genre: $genre");
                 debugPrint("Year: ${year.toString()}");
                 debugPrint("Track Number: ${trackNumber.toString()}");
                 debugPrint("Track Total: ${trackTotal.toString()}");
+                debugPrint("Disc Number: ${discNumber.toString()}");
+                debugPrint("Disc Total: ${discTotal.toString()}");
                 debugPrint("Duration: ${duration.toString()}");
                 debugPrint("Pictures: $pictures");
               },

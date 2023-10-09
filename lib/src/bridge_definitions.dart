@@ -94,10 +94,13 @@ class Tag {
   final String? title;
 
   /// The artist of the song.
-  final String? artist;
+  final String? trackArtist;
 
   /// The album the song is from.
   final String? album;
+
+  /// The artist of the album.
+  final String? albumArtist;
 
   /// The year that this song was made.
   final int? year;
@@ -111,6 +114,12 @@ class Tag {
   /// The total amount of songs in a list.
   final int? trackTotal;
 
+  /// The position of the disc in a list.
+  final int? discNumber;
+
+  /// The total amount of discs in a list.
+  final int? discTotal;
+
   /// The duration of the song. Setting this field
   /// when writing will do nothing.
   final int? duration;
@@ -120,12 +129,15 @@ class Tag {
 
   const Tag({
     this.title,
-    this.artist,
+    this.trackArtist,
     this.album,
+    this.albumArtist,
     this.year,
     this.genre,
     this.trackNumber,
     this.trackTotal,
+    this.discNumber,
+    this.discTotal,
     this.duration,
     required this.pictures,
   });
