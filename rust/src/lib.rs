@@ -25,7 +25,7 @@ mod tests {
         println!("{:?}", tag.track_number);
         println!("{:?}", tag.track_total);
         println!("{:?}", tag.disc_number);
-        println!("{:?}", tag.dsic_total);
+        println!("{:?}", tag.disc_total);
         println!("{:?}", tag.genre);
         println!("{:?}", tag.duration);
         println!("{:?}", tag.pictures);
