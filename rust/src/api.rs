@@ -87,7 +87,7 @@ pub fn write(path: String, data: Tag) -> Result<(), AudioTagsError> {
     if let Some(track_total) = data.track_total {
         tag.set_track_total(track_total);
     }
-    
+
     // Disc number
     if let Some(disc_number) = data.disc_number {
         tag.set_disk(disc_number);
