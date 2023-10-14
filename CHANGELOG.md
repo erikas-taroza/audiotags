@@ -1,3 +1,12 @@
+## 1.3.0
+
+**BREAKING**: `artist` is now `trackArtist`
+
+- Add support for more metadata fields (thanks @dannyglover)
+  - `albumArtist`
+  - `discNumber`
+  - `discTotal`
+
 ## 1.2.1
 
 - Update `.pubignore`
