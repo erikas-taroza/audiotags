@@ -30,12 +30,6 @@ parser.add_argument(
     help="Bumps the version of the plugin to the given version. Ex. \"1.0.0\""
 )
 
-parser.add_argument(
-    "--ios-ssl",
-    action="store",
-    help="Used to fix the build for OpenSSL if the vendored feature is being used on aarch64-apple-ios-sim target. Please provide the path to the openssl include directory."
-)
-
 def init():
     print("Initializing your project...")
 
@@ -199,7 +193,7 @@ def code_gen():
         )
 
 
-def build(targets: list[str], openssl_path: str = None):
+def build(targets: list[str]):
     print("Building Rust code...\n")
 
     package_name = open("./rust/Cargo.toml", "r").read().split("name = \"")[1].split("\"")[0]
@@ -225,14 +219,15 @@ def build(targets: list[str], openssl_path: str = None):
     if is_linux and "linux" in targets:
         print("Building Linux libraries...\n")
 
-        os.system("rustup target add x86_64-unknown-linux-gnu")
-        result = os.system("cargo build --release --target x86_64-unknown-linux-gnu --manifest-path ./rust/Cargo.toml")
+        os.system("rustup target add x86_64-unknown-linux-musl")
+        # https://github.com/rust-lang/cargo/issues/7154#issuecomment-561947609
+        result = os.system('RUSTFLAGS="-C target-feature=-crt-static" cargo build --release --target x86_64-unknown-linux-musl --manifest-path ./rust/Cargo.toml')
         assert result == 0
 
         if os.path.exists(f"./linux/lib{package_name}.so"):
             os.remove(f"./linux/lib{package_name}.so")
 
-        shutil.move(f"./rust/target/x86_64-unknown-linux-gnu/release/lib{package_name}.so", f"./linux")
+        shutil.move(f"./rust/target/x86_64-unknown-linux-musl/release/lib{package_name}.so", f"./linux")
 
     if is_windows and "windows" in targets:
         print("Building Windows libraries...\n")
@@ -350,7 +345,7 @@ if __name__ == "__main__":
         targets = args.build
         if len(args.build) == 0:
             targets = ["android", "linux", "windows", "ios", "macos"]
-        build(targets, args.ios_ssl)
+        build(targets)
 
     if args.bump_version:
         bump_version(args.bump_version)
