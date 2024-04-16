@@ -40,9 +40,6 @@ enum MimeType {
   tiff,
   bmp,
   gif,
-
-  /// An unknown mimetype. Represented by the string.
-  none,
 }
 
 /// An object representing a picture metadata.
@@ -51,14 +48,14 @@ class Picture {
   final PictureType pictureType;
 
   /// The mime type of the picture (ex. `image/jpg`)
-  final MimeType mimeType;
+  final MimeType? mimeType;
 
   /// The picture data, in bytes.
   final Uint8List bytes;
 
   const Picture({
     required this.pictureType,
-    required this.mimeType,
+    this.mimeType,
     required this.bytes,
   });
 }

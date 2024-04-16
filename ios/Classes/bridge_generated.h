@@ -16,7 +16,7 @@ typedef struct wire_uint_8_list {
 
 typedef struct wire_Picture {
   int32_t picture_type;
-  int32_t mime_type;
+  int32_t *mime_type;
   struct wire_uint_8_list *bytes;
 } wire_Picture;
 
@@ -56,6 +56,8 @@ void wire_read(int64_t port_, struct wire_uint_8_list *path);
 
 void wire_write(int64_t port_, struct wire_uint_8_list *path, struct wire_Tag *data);
 
+int32_t *new_box_autoadd_mime_type_0(int32_t value);
+
 struct wire_Tag *new_box_autoadd_tag_0(void);
 
 uint32_t *new_box_autoadd_u32_0(uint32_t value);
@@ -70,6 +72,7 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     int64_t dummy_var = 0;
     dummy_var ^= ((int64_t) (void*) wire_read);
     dummy_var ^= ((int64_t) (void*) wire_write);
+    dummy_var ^= ((int64_t) (void*) new_box_autoadd_mime_type_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_tag_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_u32_0);
     dummy_var ^= ((int64_t) (void*) new_list_picture_0);

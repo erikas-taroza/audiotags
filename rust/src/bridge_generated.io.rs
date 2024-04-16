@@ -14,6 +14,11 @@ pub extern "C" fn wire_write(port_: i64, path: *mut wire_uint_8_list, data: *mut
 // Section: allocate functions
 
 #[no_mangle]
+pub extern "C" fn new_box_autoadd_mime_type_0(value: i32) -> *mut i32 {
+    support::new_leak_box_ptr(value)
+}
+
+#[no_mangle]
 pub extern "C" fn new_box_autoadd_tag_0() -> *mut wire_Tag {
     support::new_leak_box_ptr(wire_Tag::new_with_null_ptr())
 }
@@ -49,6 +54,12 @@ impl Wire2Api<String> for *mut wire_uint_8_list {
     fn wire2api(self) -> String {
         let vec: Vec<u8> = self.wire2api();
         String::from_utf8_lossy(&vec).into_owned()
+    }
+}
+impl Wire2Api<MimeType> for *mut i32 {
+    fn wire2api(self) -> MimeType {
+        let wrap = unsafe { support::box_from_leak_ptr(self) };
+        Wire2Api::<MimeType>::wire2api(*wrap).into()
     }
 }
 impl Wire2Api<Tag> for *mut wire_Tag {
@@ -123,7 +134,7 @@ pub struct wire_list_picture {
 #[derive(Clone)]
 pub struct wire_Picture {
     picture_type: i32,
-    mime_type: i32,
+    mime_type: *mut i32,
     bytes: *mut wire_uint_8_list,
 }
 
@@ -167,7 +178,7 @@ impl NewWithNullPtr for wire_Picture {
     fn new_with_null_ptr() -> Self {
         Self {
             picture_type: Default::default(),
-            mime_type: Default::default(),
+            mime_type: core::ptr::null_mut(),
             bytes: core::ptr::null_mut(),
         }
     }

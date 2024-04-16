@@ -5,13 +5,13 @@ pub struct Picture {
     /// The type of picture (ex. front cover)
     pub picture_type: PictureType,
     /// The mime type of the picture (ex. `image/jpg`)
-    pub mime_type: MimeType,
+    pub mime_type: Option<MimeType>,
     /// The picture data, in bytes.
     pub bytes: Vec<u8>,
 }
 
 impl Picture {
-    pub fn new(picture_type: PictureType, mime_type: MimeType, bytes: Vec<u8>) -> Self {
+    pub fn new(picture_type: PictureType, mime_type: Option<MimeType>, bytes: Vec<u8>) -> Self {
         Picture {
             picture_type,
             mime_type,
@@ -136,19 +136,17 @@ pub enum MimeType {
     Tiff,
     Bmp,
     Gif,
-    /// An unknown mimetype. Represented by the string.
+    // An unknown mimetype. Represented by the string.
     // Unknown(String),
-    None,
 }
 
 impl_enum_from!(
     lofty::MimeType,
     MimeType,
-    None;
+    Png;
     Png,
     Jpeg,
     Tiff,
     Bmp,
-    Gif,
-    None
+    Gif
 );

@@ -96,7 +96,6 @@ impl Wire2Api<MimeType> for i32 {
             2 => MimeType::Tiff,
             3 => MimeType::Bmp,
             4 => MimeType::Gif,
-            5 => MimeType::None,
             _ => unreachable!("Invalid variant for MimeType: {}", self),
         }
     }
@@ -170,7 +169,6 @@ impl support::IntoDart for MimeType {
             Self::Tiff => 2,
             Self::Bmp => 3,
             Self::Gif => 4,
-            Self::None => 5,
         }
         .into_dart()
     }
@@ -186,7 +184,7 @@ impl support::IntoDart for Picture {
     fn into_dart(self) -> support::DartAbi {
         vec![
             self.picture_type.into_into_dart().into_dart(),
-            self.mime_type.into_into_dart().into_dart(),
+            self.mime_type.into_dart(),
             self.bytes.into_into_dart().into_dart(),
         ]
         .into_dart()

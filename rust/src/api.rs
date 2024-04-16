@@ -105,11 +105,17 @@ pub fn write(path: String, data: Tag) -> Result<(), AudioTagsError> {
 
     // Pictures
     for (i, picture) in data.pictures.into_iter().enumerate() {
+        let mime_type = if let Some(picture_mime) = picture.mime_type {
+            Some(picture_mime.into())
+        } else {
+            None
+        };
+
         tag.set_picture(
             i,
             lofty::Picture::new_unchecked(
                 picture.picture_type.into(),
-                picture.mime_type.into(),
+                mime_type,
                 None,
                 picture.bytes,
             ),

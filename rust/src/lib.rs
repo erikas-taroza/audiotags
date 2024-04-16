@@ -61,7 +61,7 @@ mod tests {
     fn write_tag_mp3() {
         let picture1 = picture::Picture::new(
             picture::PictureType::CoverFront,
-            picture::MimeType::Jpeg,
+            Some(picture::MimeType::Jpeg),
             std::fs::File::open("samples/picture1.jpg")
                 .unwrap()
                 .bytes()
@@ -71,7 +71,7 @@ mod tests {
 
         let picture2 = picture::Picture::new(
             picture::PictureType::CoverBack,
-            picture::MimeType::Jpeg,
+            Some(picture::MimeType::Jpeg),
             std::fs::File::open("samples/picture2.jpg")
                 .unwrap()
                 .bytes()
@@ -148,7 +148,7 @@ mod tests {
     fn write_tag_mp4() {
         let picture1 = picture::Picture::new(
             picture::PictureType::CoverFront,
-            picture::MimeType::Jpeg,
+            Some(picture::MimeType::Jpeg),
             std::fs::File::open("samples/picture1.jpg")
                 .unwrap()
                 .bytes()
@@ -158,7 +158,7 @@ mod tests {
 
         let picture2 = picture::Picture::new(
             picture::PictureType::CoverBack,
-            picture::MimeType::Jpeg,
+            Some(picture::MimeType::Jpeg),
             std::fs::File::open("samples/picture2.jpg")
                 .unwrap()
                 .bytes()

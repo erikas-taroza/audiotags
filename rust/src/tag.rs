@@ -56,9 +56,15 @@ impl From<&lofty::Tag> for Tag {
             .pictures()
             .iter()
             .map(|picture| {
+                let mime_type = if let Some(picture_mime) = picture.mime_type() {
+                    Some(picture_mime.clone().into())
+                } else {
+                    None
+                };
+
                 Picture::new(
                     picture.pic_type().into(),
-                    picture.mime_type().clone().into(),
+                    mime_type,
                     picture.data().to_vec(),
                 )
             })

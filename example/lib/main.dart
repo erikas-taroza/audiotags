@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
                     pictures: [
                       Picture(
                           bytes: Uint8List.fromList([0, 0, 0, 0]),
-                          mimeType: MimeType.none,
+                          mimeType: null,
                           pictureType: PictureType.other)
                     ]);
                 AudioTags.write(path, tag);

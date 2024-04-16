@@ -91,6 +91,10 @@ class AudiotagsImpl implements Audiotags {
     }
   }
 
+  MimeType _wire2api_box_autoadd_mime_type(dynamic raw) {
+    return _wire2api_mime_type(raw);
+  }
+
   int _wire2api_box_autoadd_u32(dynamic raw) {
     return raw as int;
   }
@@ -111,6 +115,10 @@ class AudiotagsImpl implements Audiotags {
     return raw == null ? null : _wire2api_String(raw);
   }
 
+  MimeType? _wire2api_opt_box_autoadd_mime_type(dynamic raw) {
+    return raw == null ? null : _wire2api_box_autoadd_mime_type(raw);
+  }
+
   int? _wire2api_opt_box_autoadd_u32(dynamic raw) {
     return raw == null ? null : _wire2api_box_autoadd_u32(raw);
   }
@@ -121,7 +129,7 @@ class AudiotagsImpl implements Audiotags {
       throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return Picture(
       pictureType: _wire2api_picture_type(arr[0]),
-      mimeType: _wire2api_mime_type(arr[1]),
+      mimeType: _wire2api_opt_box_autoadd_mime_type(arr[1]),
       bytes: _wire2api_uint_8_list(arr[2]),
     );
   }
@@ -207,6 +215,11 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.Int32> api2wire_box_autoadd_mime_type(MimeType raw) {
+    return inner.new_box_autoadd_mime_type_0(api2wire_mime_type(raw));
+  }
+
+  @protected
   ffi.Pointer<wire_Tag> api2wire_box_autoadd_tag(Tag raw) {
     final ptr = inner.new_box_autoadd_tag_0();
     _api_fill_to_wire_tag(raw, ptr.ref);
@@ -233,6 +246,11 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.Int32> api2wire_opt_box_autoadd_mime_type(MimeType? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_mime_type(raw);
+  }
+
+  @protected
   ffi.Pointer<ffi.Uint32> api2wire_opt_box_autoadd_u32(int? raw) {
     return raw == null ? ffi.nullptr : api2wire_box_autoadd_u32(raw);
   }
@@ -254,7 +272,7 @@ class AudiotagsPlatform extends FlutterRustBridgeBase<AudiotagsWire> {
 
   void _api_fill_to_wire_picture(Picture apiObj, wire_Picture wireObj) {
     wireObj.picture_type = api2wire_picture_type(apiObj.pictureType);
-    wireObj.mime_type = api2wire_mime_type(apiObj.mimeType);
+    wireObj.mime_type = api2wire_opt_box_autoadd_mime_type(apiObj.mimeType);
     wireObj.bytes = api2wire_uint_8_list(apiObj.bytes);
   }
 
@@ -407,6 +425,20 @@ class AudiotagsWire implements FlutterRustBridgeWireBase {
       void Function(
           int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_Tag>)>();
 
+  ffi.Pointer<ffi.Int32> new_box_autoadd_mime_type_0(
+    int value,
+  ) {
+    return _new_box_autoadd_mime_type_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_mime_type_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int32> Function(ffi.Int32)>>(
+          'new_box_autoadd_mime_type_0');
+  late final _new_box_autoadd_mime_type_0 = _new_box_autoadd_mime_type_0Ptr
+      .asFunction<ffi.Pointer<ffi.Int32> Function(int)>();
+
   ffi.Pointer<wire_Tag> new_box_autoadd_tag_0() {
     return _new_box_autoadd_tag_0();
   }
@@ -489,8 +521,7 @@ final class wire_Picture extends ffi.Struct {
   @ffi.Int32()
   external int picture_type;
 
-  @ffi.Int32()
-  external int mime_type;
+  external ffi.Pointer<ffi.Int32> mime_type;
 
   external ffi.Pointer<wire_uint_8_list> bytes;
 }
