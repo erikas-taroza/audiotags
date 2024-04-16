@@ -39,7 +39,7 @@ jobs:
       - name: Install MUSL dependencies
         if: ${{ matrix.target == 'linux' }}
         run: |
-          sudo apt install musl-dev
+          sudo apt install musl-tools
       - name: Build
         run: python ./plugin_tool.py -b ${{ matrix.target }}
       - name: Upload Artifacts
