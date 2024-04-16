@@ -1,3 +1,10 @@
+## 1.4.0
+
+**BREAKING**: `MimeType.none` is removed. Instead, `null` is used to indicate no mimetype.
+
+- Update lofty dependency (thanks @dannyglover)
+- Change Linux target to `x86_64-unknown-linux-musl`
+
 ## 1.3.0
 
 **BREAKING**: `artist` is now `trackArtist`
