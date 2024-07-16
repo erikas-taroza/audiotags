@@ -1,3 +1,7 @@
+## 1.4.1
+
+- Support Gradle 8 (thanks @josereia)
+
 ## 1.4.0
 
 **BREAKING**: `MimeType.none` is removed. Instead, `null` is used to indicate no mimetype.
