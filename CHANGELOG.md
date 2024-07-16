@@ -1,6 +1,7 @@
 ## 1.4.1
 
 - Support Gradle 8 (thanks @josereia)
+- Fix CI
 
 ## 1.4.0
 
