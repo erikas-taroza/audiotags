@@ -98,5 +98,9 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
       - uses: ./.github/actions/setup_build
+      - name: Install MUSL dependencies
+        if: ${{ matrix.target == 'linux' }}
+        run: |
+          sudo apt install musl-tools
       - name: Build
         run: python ./plugin_tool.py -b ${{ matrix.target }}
