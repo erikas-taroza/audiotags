@@ -9,6 +9,7 @@ if [ ! -f macos.zip ]
 then
   curl -L "#{lib_url}" -o macos.zip
   unzip macos.zip
+  rm macos.zip
 fi
 cd ..
 `
