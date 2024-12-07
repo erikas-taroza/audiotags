@@ -1,3 +1,7 @@
+## 1.4.2
+
+- Fix `ld: library 'macos' not found` (thanks @terrakok)
+
 ## 1.4.1
 
 - Support Gradle 8 (thanks @josereia)
