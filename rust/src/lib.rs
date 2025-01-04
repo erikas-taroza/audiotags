@@ -3,10 +3,11 @@ mod frb_generated; /* AUTO INJECTED BY flutter_rust_bridge. This line may not be
 
 #[cfg(test)]
 mod tests {
-    use crate::api::*;
-
+    use crate::api::api;
+    use crate::api::picture;
+    use crate::api::tag::Tag;
     use anyhow::Context;
-    use api;
+    use std::io::Read;
 
     fn read_tag_mp3() -> anyhow::Result<()> {
         let tag = api::read("samples/test.mp3".to_string()).context("Could not read tag.")?;
