@@ -1,6 +1,6 @@
 import argparse, re, os, shutil, sys
 
-FRB_VERSION = "2.5.1"
+FRB_VERSION = "2.7.0"
 
 parser = argparse.ArgumentParser(
     usage="Put this file in your root project directory and execute the commands.",
