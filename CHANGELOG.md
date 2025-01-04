@@ -1,3 +1,8 @@
+## 1.4.3
+
+- Updated FRB to `2.7.0`
+- Fixed tests
+
 ## 1.4.2
 
 - Fix `ld: library 'macos' not found` (thanks @terrakok)
