@@ -3,16 +3,13 @@ mod frb_generated; /* AUTO INJECTED BY flutter_rust_bridge. This line may not be
 
 #[cfg(test)]
 mod tests {
-    use std::io::Read;
+    use crate::api::*;
 
-    use crate::tag::Tag;
-
-    use super::*;
     use anyhow::Context;
-    use api::*;
+    use api;
 
     fn read_tag_mp3() -> anyhow::Result<()> {
-        let tag = read("samples/test.mp3".to_string()).context("Could not read tag.")?;
+        let tag = api::read("samples/test.mp3".to_string()).context("Could not read tag.")?;
 
         println!("{:?}", tag.title);
         println!("{:?}", tag.track_artist);
@@ -32,7 +29,7 @@ mod tests {
 
     #[test]
     fn clear_tag_mp3() {
-        write(
+        api::write(
             "samples/test.mp3".to_string(),
             Tag {
                 title: None,
@@ -76,7 +73,7 @@ mod tests {
                 .collect(),
         );
 
-        write(
+        api::write(
             "samples/test.mp3".to_string(),
             Tag {
                 title: Some("Title".to_string()),
@@ -99,7 +96,7 @@ mod tests {
     }
 
     fn read_tag_mp4() -> anyhow::Result<()> {
-        let tag = read("samples/test.mp4".to_string()).context("Could not read tag.")?;
+        let tag = api::read("samples/test.mp4".to_string()).context("Could not read tag.")?;
 
         println!("{:?}", tag.title);
         println!("{:?}", tag.track_artist);
@@ -119,7 +116,7 @@ mod tests {
 
     #[test]
     fn clear_tag_mp4() {
-        write(
+        api::write(
             "samples/test.mp4".to_string(),
             Tag {
                 title: None,
@@ -163,7 +160,7 @@ mod tests {
                 .collect(),
         );
 
-        write(
+        api::write(
             "samples/test.mp4".to_string(),
             Tag {
                 title: Some("Title".to_string()),

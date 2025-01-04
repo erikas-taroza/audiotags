@@ -9,8 +9,6 @@ crate-type = ["staticlib", "cdylib"]
 [dependencies]
 flutter_rust_bridge = "=2.5.1"
 lofty = "0.18.2"
-
-[dev-dependencies]
 anyhow = "1.0.68"
 
 [profile.release]
