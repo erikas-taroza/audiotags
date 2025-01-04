@@ -5,7 +5,7 @@ homepage: https://github.com/erikas-taroza/audiotags
 repository: https://github.com/erikas-taroza/audiotags
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.3.0 <4.0.0"
   flutter: ">=3.0.0"
 
 dependencies:
@@ -13,10 +13,13 @@ dependencies:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
   ffi: ^2.0.1
-  flutter_rust_bridge: ^1.82.1
+  flutter_rust_bridge: 2.5.1
   meta: ^1.8.0
   uuid: any
   freezed_annotation: ^2.4.1
+  # Needed to run codegen. Uncomment to run codegen, otherwise keep it commented so the package can be published.
+  # rust_lib_audiotags:
+  #   path: rust_builder
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +28,7 @@ dev_dependencies:
   ffigen: ^9.0.1
   build_runner: ^2.4.6
   freezed: ^2.4.2
+  analyzer: ^6.4.1
 
 flutter:
   plugin:

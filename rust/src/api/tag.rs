@@ -1,6 +1,6 @@
 use lofty::{Accessor, ItemKey};
 
-use crate::picture::Picture;
+use super::picture::Picture;
 
 /// Represents the metadata of the file.
 #[derive(Default)]

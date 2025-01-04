@@ -1,4 +1,4 @@
-use crate::{error::AudioTagsError, tag::Tag};
+use super::{error::AudioTagsError, tag::Tag};
 use lofty::{Accessor, AudioFile, ItemKey, Probe, TagExt, TaggedFile, TaggedFileExt};
 
 /// Returns a `TaggedFile` at the given path.

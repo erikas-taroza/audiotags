@@ -1,14 +1,10 @@
 import argparse, re, os, shutil, sys
 
+FRB_VERSION = "2.5.1"
+
 parser = argparse.ArgumentParser(
     usage="Put this file in your root project directory and execute the commands.",
-    description="A tool to help you with initializing and building a Flutter plugin with Rust."
-)
-
-parser.add_argument(
-    "-i", "--init",
-    action="store_true",
-    help="Initialize the Flutter plugin project for development with Rust."
+    description="A tool to help with building a Flutter plugin with Rust."
 )
 
 parser.add_argument(
@@ -30,167 +26,40 @@ parser.add_argument(
     help="Bumps the version of the plugin to the given version. Ex. \"1.0.0\""
 )
 
-def init():
-    print("Initializing your project...")
-
-    # Add dependencies to pubspec.yaml.
-    print("Adding dependencies to pubspec.yaml...")
-
-    pubspec_text = open("./pubspec.yaml", "r").read()
-    package_name = pubspec_text.split("name: ")[1].split("\n")[0].strip()
-    pascal_case_package_name = package_name.lower().replace("_", " ").title().replace(" ", "")
-    
-    with open("./pubspec.yaml", "w") as pubspec:
-        def add_dependency(dependency: str, version: str = "", dev: bool = False) -> str:
-            key = ("dev_" if dev else "") + "dependencies"
-            split: list[str] = re.split(rf"\s{key}:\s", pubspec_text)
-            lines: list[str] = split[1].split("\n")
-            
-            for i in range(0, len(lines)):
-                if lines[i].isspace() or len(lines[i]) == 0:
-                    break
-
-            lines.insert(i, f"  {dependency}: {version}")
-
-            return split[0] + f"\n{key}:\n" + "\n".join(lines)
-
-        if "ffi:" not in pubspec_text:
-            pubspec_text = add_dependency("ffi", version="^2.0.1", dev=False)
-
-        if "flutter_rust_bridge:" not in pubspec_text:
-            pubspec_text = add_dependency("flutter_rust_bridge", version="^1.82.1", dev=False)
-        
-        if "ffigen:" not in pubspec_text:
-            pubspec_text = add_dependency("ffigen", version="^6.1.2", dev=True)
-
-        pubspec.write(pubspec_text)
-
-    # Start the Rust project.
-    print(f"Creating the Rust project with the name \"{package_name}\"...")
-    
-    os.makedirs("rust", exist_ok=True)
-    path = f"./rust/{package_name}"
-    os.system(f"cargo new {path} --lib")
-
-    for item in os.listdir(path):
-        shutil.move(f"{path}/{item}", f"./rust")
-
-    os.rmdir(path)
-
-    toml_text = open("./rust/Cargo.toml", "r").read()
-    with open("./rust/Cargo.toml", "w") as toml:
-        split = toml_text.split("\n\n")
-        toml_text = split[0] + '\n\n[lib]\ncrate-type = ["staticlib", "cdylib"]\n\n' + "\n".join(split[1:])
-        toml.write(toml_text)
-
-    # Initialize the Flutter platform specific things.
-    print("Initializing platform specific project files...\n")
-    
-    # Android
-    gradle_text = open("./android/build.gradle", "r").read()
-    if "main.jniLibs.srcDirs = ['src/main/jniLibs']" not in gradle_text:
-        with open("./android/build.gradle", "w") as gradle:
-            split = gradle_text.split("sourceSets {")
-            split[1] = "\t\tmain.jniLibs.srcDirs = ['src/main/jniLibs']" + split[1]
-            gradle.write(split[0] + "sourceSets {\n" + split[1])
-
-    # Linux
-    linux_cmake_text = open("./linux/CMakeLists.txt", "r").read()
-    if f'set(CRATE_NAME, "{package_name}")' not in linux_cmake_text:
-        with open("./linux/CMakeLists.txt", "w") as cmake:
-            split = linux_cmake_text.split(f"set({package_name}_bundled_libraries")
-            split[1] = split[1].replace('""', r'"${CMAKE_CURRENT_SOURCE_DIR}/lib' + f'{package_name}.so"')
-            linux_cmake_text = split[0] + f"\nset({package_name}_bundled_libraries" + split[1]
-            cmake.write(linux_cmake_text)
-
-    # Windows
-    windows_cmake_text = open("./windows/CMakeLists.txt", "r").read()
-    if f'set(CRATE_NAME, "{package_name}")' not in windows_cmake_text:
-        with open("./windows/CMakeLists.txt", "w") as cmake:
-            split = windows_cmake_text.split(f"set({package_name}_bundled_libraries")
-            split[1] = split[1].replace('""', r'"${CMAKE_CURRENT_SOURCE_DIR}/pkgname.dll"')
-            windows_cmake_text = split[0] + f"set({package_name}_bundled_libraries" + split[1].replace("pkgname", package_name)
-            cmake.write(windows_cmake_text)
-
-    # macOS
-    mac_podspec = open(f"./macos/{package_name}.podspec", "r").read()
-    if "s.vendored_libraries" not in mac_podspec:
-        with open(f"./macos/{package_name}.podspec", "w") as podspec:
-            # Remove the end keyword ----------v
-            mac_podspec = mac_podspec.strip()[:-3] + "  s.vendored_libraries = 'Libs/**/*'\nend"
-            podspec.write(mac_podspec)
-
-    swift_text = open(f"./macos/Classes/{pascal_case_package_name}Plugin.swift", "r").read()
-    if "dummy_method" not in swift_text:
-            with open(f"./macos/Classes/{pascal_case_package_name}Plugin.swift", "w") as swift:
-                entry_point = "public static func register(with registrar: FlutterPluginRegistrar) {"
-                split = swift_text.split(entry_point)
-                split[1] = "\n\t\tlet _ = dummy_method_to_enforce_bundling()" + split[1]
-                swift_text = split[0] + entry_point + split[1]
-                swift.write(swift_text)
-
-    # iOS
-    ios_podspec = open(f"./ios/{package_name}.podspec", "r").read()
-    if "s.vendored_frameworks" not in ios_podspec:
-        with open(f"./ios/{package_name}.podspec", "w") as podspec:
-            ios_podspec = ios_podspec.strip()[:-3] + "  s.vendored_frameworks = 'Frameworks/**/*.xcframework'\n  s.static_framework = true\nend"
-            podspec.write(ios_podspec)
-
-    # If this is a Swift project
-    if os.path.exists(f"./ios/Classes/Swift{pascal_case_package_name}Plugin.swift"):
-        swift_text = open(f"./ios/Classes/Swift{pascal_case_package_name}Plugin.swift", "r").read()
-        
-        if "dummy_method" not in swift_text:
-            with open(f"./ios/Classes/Swift{pascal_case_package_name}Plugin.swift", "w") as swift:
-                entry_point = "public static func register(with registrar: FlutterPluginRegistrar) {"
-                split = swift_text.split(entry_point)
-                split[1] = "\n\t\tlet _ = dummy_method_to_enforce_bundling()" + split[1]
-                swift_text = split[0] + entry_point + split[1]
-                swift.write(swift_text)
-    # Obj-C project
-    else:
-        objc_text = open(f"./ios/Classes/{pascal_case_package_name}Plugin.m", "r").read()
-
-        if "dummy_method" not in objc_text:
-            with open(f"./ios/Classes/{pascal_case_package_name}Plugin.m", "w") as objc:
-                objc_text = '#import "../Classes/bridge_generated.h"' + objc_text
-                entry_point = "+ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {"
-                split = objc_text.split(entry_point)
-                split[1] = "\n\tdummy_method_to_enforce_bundling();" + split[1]
-                objc_text = split[0] + entry_point + split[1]
-                objc.write(objc_text)
-
-
 def code_gen():
     print("Generating code with flutter_rust_bridge...\n")
 
-    os.system("cargo install flutter_rust_bridge_codegen --version 1.82.1")
-    os.system('flutter_rust_bridge_codegen \
-        --dart-enums-style \
-        --rust-input ./rust/src/api.rs \
-        --dart-output ./lib/src/bridge_generated.dart \
-        --dart-decl-output ./lib/src/bridge_definitions.dart \
-        --c-output ./rust/src/bridge_generated.h')
+    pubspec = open("./pubspec.yaml", "r+")
+    lines = pubspec.readlines()
+    for line in range(0, len(lines)):
+        if "# rust_lib_audiotags" not in lines[line]:
+            continue
 
-    shutil.copyfile("./rust/src/bridge_generated.h", "./ios/Classes/bridge_generated.h")
-    shutil.move("./rust/src/bridge_generated.h", "./macos/Classes/bridge_generated.h")
+        lines[line] = "  rust_lib_audiotags:\n"
+        lines[line + 1] = "    path: rust_builder\n"
+        pubspec.seek(0)
+        pubspec.writelines(lines)
+        pubspec.truncate()
+        break
+    pubspec.close()
 
-    # Fix the incorrect import in the generated file.
-    # This happens because we are using lib.rs as the entry point.
-    generated_text = open("./rust/src/bridge_generated.rs", "r").read()
-    open("./rust/src/bridge_generated.rs", "w").write(generated_text.replace("use crate::lib::*;", "use crate::*;"))
+    os.system(f"cargo install flutter_rust_bridge_codegen --version {FRB_VERSION}")
+    os.system("cargo install cargo-expand --version 1.0.70")
+    os.system("flutter_rust_bridge_codegen generate --config-file ./flutter_rust_bridge.yaml")
 
-    if "ffi.dart" not in os.listdir("./lib/src"):
-        package_name = open("./rust/Cargo.toml", "r").read().split("name = \"")[1].split("\"")[0]
-        pascal_case_package_name = package_name.lower().replace("_", " ").title().replace(" ", "")
-        import requests
-        file = open("./lib/src/ffi.dart", "w")
-        file.write(
-            requests.get(r"https://raw.githubusercontent.com/Desdaemon/flutter_rust_bridge_template/main/lib/ffi.dart")
-                .text
-                .replace("native", package_name)
-                .replace("Native", pascal_case_package_name)
-        )
+    pubspec = open("./pubspec.yaml", "r+")
+    lines = pubspec.readlines()
+    for line in range(0, len(lines)):
+        if "rust_lib_audiotags" not in lines[line]:
+            continue
+
+        lines[line] = "  # rust_lib_audiotags:\n"
+        lines[line + 1] = "  #   path: rust_builder\n"
+        pubspec.seek(0)
+        pubspec.writelines(lines)
+        pubspec.truncate()
+        break
+    pubspec.close()
 
 
 def build(targets: list[str]):
@@ -334,9 +203,6 @@ def bump_version(version: str):
 
 if __name__ == "__main__":
     args = parser.parse_args()
-
-    if args.init:
-        init()
 
     if args.code_gen:
         code_gen()

@@ -1,9 +1,9 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint, non_nullable_equals_parameter
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'bridge_definitions.dart';
+part of 'error.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,7 +12,7 @@ part of 'bridge_definitions.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AudioTagsError {
@@ -84,6 +84,9 @@ class _$AudioTagsErrorCopyWithImpl<$Res, $Val extends AudioTagsError>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of AudioTagsError
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -102,12 +105,15 @@ class __$$AudioTagsError_InvalidPathImplCopyWithImpl<$Res>
       _$AudioTagsError_InvalidPathImpl _value,
       $Res Function(_$AudioTagsError_InvalidPathImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of AudioTagsError
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$AudioTagsError_InvalidPathImpl implements AudioTagsError_InvalidPath {
-  const _$AudioTagsError_InvalidPathImpl();
+class _$AudioTagsError_InvalidPathImpl extends AudioTagsError_InvalidPath {
+  const _$AudioTagsError_InvalidPathImpl() : super._();
 
   @override
   String toString() {
@@ -115,7 +121,7 @@ class _$AudioTagsError_InvalidPathImpl implements AudioTagsError_InvalidPath {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AudioTagsError_InvalidPathImpl);
@@ -199,8 +205,9 @@ class _$AudioTagsError_InvalidPathImpl implements AudioTagsError_InvalidPath {
   }
 }
 
-abstract class AudioTagsError_InvalidPath implements AudioTagsError {
+abstract class AudioTagsError_InvalidPath extends AudioTagsError {
   const factory AudioTagsError_InvalidPath() = _$AudioTagsError_InvalidPathImpl;
+  const AudioTagsError_InvalidPath._() : super._();
 }
 
 /// @nodoc
@@ -218,12 +225,15 @@ class __$$AudioTagsError_NoTagsImplCopyWithImpl<$Res>
   __$$AudioTagsError_NoTagsImplCopyWithImpl(_$AudioTagsError_NoTagsImpl _value,
       $Res Function(_$AudioTagsError_NoTagsImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of AudioTagsError
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$AudioTagsError_NoTagsImpl implements AudioTagsError_NoTags {
-  const _$AudioTagsError_NoTagsImpl();
+class _$AudioTagsError_NoTagsImpl extends AudioTagsError_NoTags {
+  const _$AudioTagsError_NoTagsImpl() : super._();
 
   @override
   String toString() {
@@ -231,7 +241,7 @@ class _$AudioTagsError_NoTagsImpl implements AudioTagsError_NoTags {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AudioTagsError_NoTagsImpl);
@@ -315,8 +325,9 @@ class _$AudioTagsError_NoTagsImpl implements AudioTagsError_NoTags {
   }
 }
 
-abstract class AudioTagsError_NoTags implements AudioTagsError {
+abstract class AudioTagsError_NoTags extends AudioTagsError {
   const factory AudioTagsError_NoTags() = _$AudioTagsError_NoTagsImpl;
+  const AudioTagsError_NoTags._() : super._();
 }
 
 /// @nodoc
@@ -338,6 +349,8 @@ class __$$AudioTagsError_OpenFileImplCopyWithImpl<$Res>
       $Res Function(_$AudioTagsError_OpenFileImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AudioTagsError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -354,8 +367,8 @@ class __$$AudioTagsError_OpenFileImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AudioTagsError_OpenFileImpl implements AudioTagsError_OpenFile {
-  const _$AudioTagsError_OpenFileImpl({required this.message});
+class _$AudioTagsError_OpenFileImpl extends AudioTagsError_OpenFile {
+  const _$AudioTagsError_OpenFileImpl({required this.message}) : super._();
 
   @override
   final String message;
@@ -366,7 +379,7 @@ class _$AudioTagsError_OpenFileImpl implements AudioTagsError_OpenFile {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AudioTagsError_OpenFileImpl &&
@@ -376,7 +389,9 @@ class _$AudioTagsError_OpenFileImpl implements AudioTagsError_OpenFile {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AudioTagsError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AudioTagsError_OpenFileImplCopyWith<_$AudioTagsError_OpenFileImpl>
@@ -458,12 +473,16 @@ class _$AudioTagsError_OpenFileImpl implements AudioTagsError_OpenFile {
   }
 }
 
-abstract class AudioTagsError_OpenFile implements AudioTagsError {
+abstract class AudioTagsError_OpenFile extends AudioTagsError {
   const factory AudioTagsError_OpenFile({required final String message}) =
       _$AudioTagsError_OpenFileImpl;
+  const AudioTagsError_OpenFile._() : super._();
 
   String get message;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AudioTagsError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AudioTagsError_OpenFileImplCopyWith<_$AudioTagsError_OpenFileImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -485,6 +504,8 @@ class __$$AudioTagsError_WriteImplCopyWithImpl<$Res>
       $Res Function(_$AudioTagsError_WriteImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of AudioTagsError
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -501,8 +522,8 @@ class __$$AudioTagsError_WriteImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AudioTagsError_WriteImpl implements AudioTagsError_Write {
-  const _$AudioTagsError_WriteImpl({required this.message});
+class _$AudioTagsError_WriteImpl extends AudioTagsError_Write {
+  const _$AudioTagsError_WriteImpl({required this.message}) : super._();
 
   @override
   final String message;
@@ -513,7 +534,7 @@ class _$AudioTagsError_WriteImpl implements AudioTagsError_Write {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AudioTagsError_WriteImpl &&
@@ -523,7 +544,9 @@ class _$AudioTagsError_WriteImpl implements AudioTagsError_Write {
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AudioTagsError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AudioTagsError_WriteImplCopyWith<_$AudioTagsError_WriteImpl>
@@ -606,12 +629,16 @@ class _$AudioTagsError_WriteImpl implements AudioTagsError_Write {
   }
 }
 
-abstract class AudioTagsError_Write implements AudioTagsError {
+abstract class AudioTagsError_Write extends AudioTagsError {
   const factory AudioTagsError_Write({required final String message}) =
       _$AudioTagsError_WriteImpl;
+  const AudioTagsError_Write._() : super._();
 
   String get message;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AudioTagsError
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AudioTagsError_WriteImplCopyWith<_$AudioTagsError_WriteImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
