@@ -349,8 +349,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Tag dco_decode_tag(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 12)
-      throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
+    if (arr.length != 13)
+      throw Exception('unexpected arr length: expect 13 but see ${arr.length}');
     return Tag(
       title: dco_decode_opt_String(arr[0]),
       trackArtist: dco_decode_opt_String(arr[1]),
@@ -362,8 +362,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       trackTotal: dco_decode_opt_box_autoadd_u_32(arr[7]),
       discNumber: dco_decode_opt_box_autoadd_u_32(arr[8]),
       discTotal: dco_decode_opt_box_autoadd_u_32(arr[9]),
-      duration: dco_decode_opt_box_autoadd_u_32(arr[10]),
-      pictures: dco_decode_list_picture(arr[11]),
+      lyrics: dco_decode_opt_String(arr[10]),
+      duration: dco_decode_opt_box_autoadd_u_32(arr[11]),
+      pictures: dco_decode_list_picture(arr[12]),
     );
   }
 
@@ -539,6 +540,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_trackTotal = sse_decode_opt_box_autoadd_u_32(deserializer);
     var var_discNumber = sse_decode_opt_box_autoadd_u_32(deserializer);
     var var_discTotal = sse_decode_opt_box_autoadd_u_32(deserializer);
+    var var_lyrics = sse_decode_opt_String(deserializer);
     var var_duration = sse_decode_opt_box_autoadd_u_32(deserializer);
     var var_pictures = sse_decode_list_picture(deserializer);
     return Tag(
@@ -552,6 +554,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         trackTotal: var_trackTotal,
         discNumber: var_discNumber,
         discTotal: var_discTotal,
+        lyrics: var_lyrics,
         duration: var_duration,
         pictures: var_pictures);
   }
@@ -718,6 +721,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_box_autoadd_u_32(self.trackTotal, serializer);
     sse_encode_opt_box_autoadd_u_32(self.discNumber, serializer);
     sse_encode_opt_box_autoadd_u_32(self.discTotal, serializer);
+    sse_encode_opt_String(self.lyrics, serializer);
     sse_encode_opt_box_autoadd_u_32(self.duration, serializer);
     sse_encode_list_picture(self.pictures, serializer);
   }

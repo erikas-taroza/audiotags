@@ -403,6 +403,7 @@ impl SseDecode for crate::api::tag::Tag {
         let mut var_trackTotal = <Option<u32>>::sse_decode(deserializer);
         let mut var_discNumber = <Option<u32>>::sse_decode(deserializer);
         let mut var_discTotal = <Option<u32>>::sse_decode(deserializer);
+        let mut var_lyrics = <Option<String>>::sse_decode(deserializer);
         let mut var_duration = <Option<u32>>::sse_decode(deserializer);
         let mut var_pictures = <Vec<crate::api::picture::Picture>>::sse_decode(deserializer);
         return crate::api::tag::Tag {
@@ -416,6 +417,7 @@ impl SseDecode for crate::api::tag::Tag {
             track_total: var_trackTotal,
             disc_number: var_discNumber,
             disc_total: var_discTotal,
+            lyrics: var_lyrics,
             duration: var_duration,
             pictures: var_pictures,
         };
@@ -596,6 +598,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::tag::Tag {
             self.track_total.into_into_dart().into_dart(),
             self.disc_number.into_into_dart().into_dart(),
             self.disc_total.into_into_dart().into_dart(),
+            self.lyrics.into_into_dart().into_dart(),
             self.duration.into_into_dart().into_dart(),
             self.pictures.into_into_dart().into_dart(),
         ]
@@ -781,6 +784,7 @@ impl SseEncode for crate::api::tag::Tag {
         <Option<u32>>::sse_encode(self.track_total, serializer);
         <Option<u32>>::sse_encode(self.disc_number, serializer);
         <Option<u32>>::sse_encode(self.disc_total, serializer);
+        <Option<String>>::sse_encode(self.lyrics, serializer);
         <Option<u32>>::sse_encode(self.duration, serializer);
         <Vec<crate::api::picture::Picture>>::sse_encode(self.pictures, serializer);
     }
