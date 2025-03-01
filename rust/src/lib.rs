@@ -22,6 +22,7 @@ mod tests {
         println!("{:?}", tag.disc_number);
         println!("{:?}", tag.disc_total);
         println!("{:?}", tag.genre);
+        println!("{:?}", tag.lyrics);
         println!("{:?}", tag.duration);
         println!("{:?}", tag.pictures);
 
@@ -43,6 +44,7 @@ mod tests {
                 track_total: None,
                 disc_number: None,
                 disc_total: None,
+                lyrics: None,
                 duration: None,
                 pictures: Vec::new(),
             },
@@ -109,6 +111,7 @@ mod tests {
         println!("{:?}", tag.disc_number);
         println!("{:?}", tag.disc_total);
         println!("{:?}", tag.genre);
+        println!("{:?}", tag.lyrics);
         println!("{:?}", tag.duration);
         println!("{:?}", tag.pictures);
 
@@ -130,6 +133,7 @@ mod tests {
                 track_total: None,
                 disc_number: None,
                 disc_total: None,
+                lyrics: None,
                 duration: None,
                 pictures: Vec::new(),
             },
@@ -174,6 +178,7 @@ mod tests {
                 disc_number: Some(1),
                 disc_total: Some(3),
                 genre: Some("Genre".to_string()),
+                lyrics: Some("lyrics - test string".to_string()),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
             },

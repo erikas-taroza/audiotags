@@ -41,6 +41,9 @@ class Tag {
   /// The total amount of discs in a list.
   final int? discTotal;
 
+  /// the lyrics of the song
+  final String? lyrics;
+
   /// The duration of the song. Setting this field
   /// when writing will do nothing.
   final int? duration;
@@ -59,6 +62,7 @@ class Tag {
     this.trackTotal,
     this.discNumber,
     this.discTotal,
+    this.lyrics,
     this.duration,
     required this.pictures,
   });
@@ -82,6 +86,7 @@ class Tag {
       trackTotal.hashCode ^
       discNumber.hashCode ^
       discTotal.hashCode ^
+      lyrics.hashCode ^
       duration.hashCode ^
       pictures.hashCode;
 
@@ -100,6 +105,7 @@ class Tag {
           trackTotal == other.trackTotal &&
           discNumber == other.discNumber &&
           discTotal == other.discTotal &&
+          lyrics == other.lyrics &&
           duration == other.duration &&
           pictures == other.pictures;
 }
