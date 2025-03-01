@@ -25,7 +25,7 @@ pub struct Tag {
     pub disc_number: Option<u32>,
     /// The total amount of discs in a list.
     pub disc_total: Option<u32>,
-    /// the lyrics of the song
+    /// The lyrics of the song.
     pub lyrics: Option<String>,
     /// The duration of the song. Setting this field
     /// when writing will do nothing.

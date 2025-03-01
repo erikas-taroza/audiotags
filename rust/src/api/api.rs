@@ -122,7 +122,7 @@ pub fn write(path: String, data: Tag) -> Result<(), AudioTagsError> {
         );
     }
 
-    //Lyrics
+    // Lyrics
     if let Some(lyrics) = data.lyrics {
         tag.insert_text(ItemKey::Lyrics, lyrics);
     }

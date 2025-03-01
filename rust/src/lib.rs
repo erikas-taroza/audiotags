@@ -89,6 +89,7 @@ mod tests {
                 disc_number: Some(1),
                 disc_total: Some(3),
                 genre: Some("Genre".to_string()),
+                lyrics: Some("Lyrics - test string".to_string()),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
             },
@@ -178,7 +179,7 @@ mod tests {
                 disc_number: Some(1),
                 disc_total: Some(3),
                 genre: Some("Genre".to_string()),
-                lyrics: Some("lyrics - test string".to_string()),
+                lyrics: Some("Lyrics - test string".to_string()),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
             },

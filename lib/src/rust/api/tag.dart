@@ -41,7 +41,7 @@ class Tag {
   /// The total amount of discs in a list.
   final int? discTotal;
 
-  /// the lyrics of the song
+  /// The lyrics of the song.
   final String? lyrics;
 
   /// The duration of the song. Setting this field
