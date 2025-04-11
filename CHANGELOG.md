@@ -1,3 +1,7 @@
+## 1.4.4
+
+- Support lyrics (thanks @howmind)
+
 ## 1.4.3
 
 - Updated FRB to `2.7.0`
