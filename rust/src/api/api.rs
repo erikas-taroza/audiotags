@@ -105,11 +105,7 @@ pub fn write(path: String, data: Tag) -> Result<(), AudioTagsError> {
 
     // Pictures
     for (i, picture) in data.pictures.into_iter().enumerate() {
-        let mime_type = if let Some(picture_mime) = picture.mime_type {
-            Some(picture_mime.into())
-        } else {
-            None
-        };
+        let mime_type = picture.mime_type.map(|p| p.into());
 
         tag.set_picture(
             i,
@@ -125,6 +121,13 @@ pub fn write(path: String, data: Tag) -> Result<(), AudioTagsError> {
     // Lyrics
     if let Some(lyrics) = data.lyrics {
         tag.insert_text(ItemKey::Lyrics, lyrics);
+    }
+
+    // Bpm
+    if let Some(bpm) = data.bpm {
+        if !tag.insert_text(ItemKey::Bpm, bpm.to_string()) {
+            tag.insert_text(ItemKey::IntegerBpm, (bpm as u32).to_string());
+        }
     }
 
     match tag.save_to_path(path) {

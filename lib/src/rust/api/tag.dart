@@ -51,6 +51,9 @@ class Tag {
   /// All the pictures of the song.
   final List<Picture> pictures;
 
+  /// Beats per minute.
+  final double? bpm;
+
   const Tag({
     this.title,
     this.trackArtist,
@@ -65,6 +68,7 @@ class Tag {
     this.lyrics,
     this.duration,
     required this.pictures,
+    this.bpm,
   });
 
   static Future<Tag> default_() => RustLib.instance.api.crateApiTagTagDefault();
@@ -88,7 +92,8 @@ class Tag {
       discTotal.hashCode ^
       lyrics.hashCode ^
       duration.hashCode ^
-      pictures.hashCode;
+      pictures.hashCode ^
+      bpm.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -107,5 +112,6 @@ class Tag {
           discTotal == other.discTotal &&
           lyrics == other.lyrics &&
           duration == other.duration &&
-          pictures == other.pictures;
+          pictures == other.pictures &&
+          bpm == other.bpm;
 }

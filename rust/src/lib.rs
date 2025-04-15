@@ -24,6 +24,7 @@ mod tests {
         println!("{:?}", tag.genre);
         println!("{:?}", tag.lyrics);
         println!("{:?}", tag.duration);
+        println!("{:?}", tag.bpm);
         println!("{:?}", tag.pictures);
 
         Ok(())
@@ -47,6 +48,7 @@ mod tests {
                 lyrics: None,
                 duration: None,
                 pictures: Vec::new(),
+                bpm: None,
             },
         )
         .expect("Could not write tag.");
@@ -90,6 +92,7 @@ mod tests {
                 disc_total: Some(3),
                 genre: Some("Genre".to_string()),
                 lyrics: Some("Lyrics - test string".to_string()),
+                bpm: Some(140.0),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
             },
@@ -114,6 +117,7 @@ mod tests {
         println!("{:?}", tag.genre);
         println!("{:?}", tag.lyrics);
         println!("{:?}", tag.duration);
+        println!("{:?}", tag.bpm);
         println!("{:?}", tag.pictures);
 
         Ok(())
@@ -137,6 +141,7 @@ mod tests {
                 lyrics: None,
                 duration: None,
                 pictures: Vec::new(),
+                bpm: None,
             },
         )
         .expect("Could not write tag.");
@@ -180,6 +185,7 @@ mod tests {
                 disc_total: Some(3),
                 genre: Some("Genre".to_string()),
                 lyrics: Some("Lyrics - test string".to_string()),
+                bpm: Some(140.0),
                 pictures: vec![picture1, picture2],
                 ..Default::default()
             },

@@ -266,6 +266,13 @@ impl SseDecode for bool {
     }
 }
 
+impl SseDecode for f32 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_f32::<NativeEndian>().unwrap()
+    }
+}
+
 impl SseDecode for i32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -317,6 +324,17 @@ impl SseDecode for Option<String> {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<String>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<f32> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<f32>::sse_decode(deserializer));
         } else {
             return None;
         }
@@ -406,6 +424,7 @@ impl SseDecode for crate::api::tag::Tag {
         let mut var_lyrics = <Option<String>>::sse_decode(deserializer);
         let mut var_duration = <Option<u32>>::sse_decode(deserializer);
         let mut var_pictures = <Vec<crate::api::picture::Picture>>::sse_decode(deserializer);
+        let mut var_bpm = <Option<f32>>::sse_decode(deserializer);
         return crate::api::tag::Tag {
             title: var_title,
             track_artist: var_trackArtist,
@@ -420,6 +439,7 @@ impl SseDecode for crate::api::tag::Tag {
             lyrics: var_lyrics,
             duration: var_duration,
             pictures: var_pictures,
+            bpm: var_bpm,
         };
     }
 }
@@ -601,6 +621,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::tag::Tag {
             self.lyrics.into_into_dart().into_dart(),
             self.duration.into_into_dart().into_dart(),
             self.pictures.into_into_dart().into_dart(),
+            self.bpm.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -648,6 +669,13 @@ impl SseEncode for bool {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         serializer.cursor.write_u8(self as _).unwrap();
+    }
+}
+
+impl SseEncode for f32 {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_f32::<NativeEndian>(self).unwrap();
     }
 }
 
@@ -703,6 +731,16 @@ impl SseEncode for Option<String> {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <String>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<f32> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <f32>::sse_encode(value, serializer);
         }
     }
 }
@@ -787,6 +825,7 @@ impl SseEncode for crate::api::tag::Tag {
         <Option<String>>::sse_encode(self.lyrics, serializer);
         <Option<u32>>::sse_encode(self.duration, serializer);
         <Vec<crate::api::picture::Picture>>::sse_encode(self.pictures, serializer);
+        <Option<f32>>::sse_encode(self.bpm, serializer);
     }
 }
 

@@ -32,6 +32,8 @@ pub struct Tag {
     pub duration: Option<u32>,
     /// All the pictures of the song.
     pub pictures: Vec<Picture>,
+    /// Beats per minute.
+    pub bpm: Option<f32>,
 }
 
 impl Tag {
@@ -50,6 +52,7 @@ impl Tag {
             && self.duration.is_none()
             && self.pictures.is_empty()
             && self.lyrics.is_none()
+            && self.bpm.is_none()
     }
 }
 
@@ -59,11 +62,7 @@ impl From<&lofty::Tag> for Tag {
             .pictures()
             .iter()
             .map(|picture| {
-                let mime_type = if let Some(picture_mime) = picture.mime_type() {
-                    Some(picture_mime.clone().into())
-                } else {
-                    None
-                };
+                let mime_type = picture.mime_type().map(|p| p.clone().into());
 
                 Picture::new(
                     picture.pic_type().into(),
@@ -73,13 +72,20 @@ impl From<&lofty::Tag> for Tag {
             })
             .collect::<Vec<Picture>>();
 
+        let bpm = if let Some(bpm_decimal) = tag.get_string(&ItemKey::Bpm) {
+            Some(str::parse::<f32>(bpm_decimal).unwrap())
+        } else {
+            tag.get_string(&ItemKey::IntegerBpm)
+                .map(|bpm_int| str::parse::<f32>(bpm_int).unwrap())
+        };
+
         Tag {
-            title: tag.get_string(&ItemKey::TrackTitle).map(|e| e.to_string()),
-            track_artist: tag.get_string(&ItemKey::TrackArtist).map(|e| e.to_string()),
-            album: tag.get_string(&ItemKey::AlbumTitle).map(|e| e.to_string()),
+            title: tag.title().map(|f| f.to_string()),
+            track_artist: tag.artist().map(|f| f.to_string()),
+            album: tag.album().map(|f| f.to_string()),
             album_artist: tag.get_string(&ItemKey::AlbumArtist).map(|e| e.to_string()),
             year: tag.year(),
-            genre: tag.get_string(&ItemKey::Genre).map(|e| e.to_string()),
+            genre: tag.genre().map(|f| f.to_string()),
             track_number: tag.track(),
             track_total: tag.track_total(),
             disc_number: tag.disk(),
@@ -87,6 +93,7 @@ impl From<&lofty::Tag> for Tag {
             lyrics: tag.get_string(&ItemKey::Lyrics).map(|e| e.to_string()),
             pictures,
             duration: None,
+            bpm,
         }
     }
 }
