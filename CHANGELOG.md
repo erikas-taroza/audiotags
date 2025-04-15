@@ -1,3 +1,7 @@
+## 1.4.5
+
+- Add support for reading BPM
+
 ## 1.4.4
 
 - Support lyrics (thanks @howmind)
