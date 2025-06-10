@@ -4,6 +4,7 @@ audiotags.dll
 audiotags.xcframework
 *.zip
 *.tar.gz
+target
 
 *.lock
 
