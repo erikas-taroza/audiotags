@@ -24,21 +24,24 @@ jobs:
         with:
           channel: "stable"
           cache: true
-      - run: flutter pub get
+      - name: flutter pub get
+        run: |
+          cd audiotags
+          flutter pub get
 
       - name: Format
         run: |
-          cd rust
+          cd audiotags/rust
           cargo +nightly fmt --check
           cd ..
       - name: Clippy
         run: |
-          cd rust
-          cargo +nightly clippy 
+          cd audiotags/rust
+          cargo +nightly clippy
           cd ..
       - name: Run Tests
         run: |
-          cd rust
+          cd audiotags/rust
           cargo test
           cd ..
 
@@ -53,31 +56,42 @@ jobs:
         with:
           channel: "stable"
           cache: true
-      - run: flutter pub get
+      - run: cd audiotags && flutter pub get
       - name: Format
-        run: |
-          cd lib/src
-          dart format --set-exit-if-changed . 
-          cd ../..
+        working-directory: audiotags/lib/src
+        run: dart format --set-exit-if-changed .
       - name: Lint
-        run: |
-          cd lib/src
-          dart analyze --fatal-infos
-          cd ../..
+        working-directory: audiotags/lib/src
+        run: dart analyze --fatal-infos
       - name: Format Example
-        run: |
-          cd example/lib
-          dart format --set-exit-if-changed . 
-          cd ../..
+        working-directory: audiotags/example/lib
+        run: dart format --set-exit-if-changed .
       - name: Lint Example
-        run: |
-          cd example/lib
-          dart analyze --fatal-infos
-          cd ../..
+        working-directory: audiotags/example/lib
+        run: dart analyze --fatal-infos
+
+  dart_cli_lint:
+    name: Dart CLI Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: subosito/flutter-action@v2.10.0
+        with:
+          channel: "stable"
+          cache: true
+      - run: cd cli && flutter pub get
+      - name: Format
+        working-directory: cli
+        run: dart format --set-exit-if-changed .
+      - name: Lint
+        working-directory: cli
+        run: dart analyze --fatal-infos
 
   build:
     name: Build Libraries
-    needs: [rust_lint, dart_lint]
+    needs: [rust_lint, dart_lint, dart_cli_lint]
     strategy:
       matrix:
         include:
@@ -103,4 +117,4 @@ jobs:
         run: |
           sudo apt install musl-tools
       - name: Build
-        run: python ./plugin_tool.py -b ${{ matrix.target }}
+        run: dart run cli build ${{ matrix.target }} -v
