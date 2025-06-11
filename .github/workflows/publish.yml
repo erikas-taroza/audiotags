@@ -12,23 +12,23 @@ jobs:
         include:
           - target: linux
             os: ubuntu-20.04
-            path: ./linux/libaudiotags.so
+            path: audiotags/linux/libaudiotags.so
           - target: android
             os: ubuntu-latest
             path: |
-              ./android/src/main/jniLibs/arm64-v8a/libaudiotags.so
-              ./android/src/main/jniLibs/armeabi-v7a/libaudiotags.so
-              ./android/src/main/jniLibs/x86_64/libaudiotags.so
-              ./android/src/main/jniLibs/x86/libaudiotags.so
+              audiotags/android/src/main/jniLibs/arm64-v8a/libaudiotags.so
+              audiotags/android/src/main/jniLibs/armeabi-v7a/libaudiotags.so
+              audiotags/android/src/main/jniLibs/x86_64/libaudiotags.so
+              audiotags/android/src/main/jniLibs/x86/libaudiotags.so
           - target: windows
             os: windows-latest
-            path: ./windows/audiotags.dll
+            path: audiotags/windows/audiotags.dll
           - target: macos
             os: macos-latest
-            path: ./macos/Libs/libaudiotags.a
+            path: audiotags/macos/Libs/libaudiotags.a
           - target: ios
             os: macos-latest
-            path: ./ios/Frameworks/audiotags.xcframework
+            path: audiotags/ios/Frameworks/audiotags.xcframework
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -41,9 +41,9 @@ jobs:
         run: |
           sudo apt install musl-tools
       - name: Build
-        run: python ./plugin_tool.py -b ${{ matrix.target }}
+        run: dart run cli build ${{ matrix.target }} -v
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4.4.3
+        uses: actions/upload-artifact@v4.5.0
         with:
           name: ${{ matrix.target }}
           path: ${{ matrix.path }}
