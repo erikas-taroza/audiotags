@@ -3,13 +3,12 @@ version = "1.4.5"
 lib_url = "https://github.com/erikas-taroza/audiotags/releases/download/v#{version}/macos.zip"
 
 `
-mkdir Libs
-cd Libs
+mkdir Frameworks
+cd Frameworks
 if [ ! -f macos.zip ]
 then
   curl -L "#{lib_url}" -o macos.zip
-  unzip macos.zip
-  rm macos.zip
+  unzip macos.zip -d 'audiotags.xcframework'
 fi
 cd ..
 `
@@ -27,7 +26,8 @@ A new Flutter plugin project.
 
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
-  s.vendored_libraries = 'Libs/**/*'
+  s.vendored_frameworks = 'Frameworks/**/*.xcframework'
+  s.static_framework = true
   s.dependency 'FlutterMacOS'
 
   s.platform = :osx, '10.11'
