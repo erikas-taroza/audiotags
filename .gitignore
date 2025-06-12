@@ -4,6 +4,7 @@ audiotags.dll
 audiotags.xcframework
 *.zip
 *.tar.gz
+target
 
 *.lock
 
@@ -36,4 +37,3 @@ migrate_working_dir/
 **/doc/api/
 .dart_tool/
 .packages
-build/
