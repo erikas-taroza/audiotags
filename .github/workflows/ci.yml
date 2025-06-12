@@ -96,7 +96,7 @@ jobs:
       matrix:
         include:
           - target: linux
-            os: ubuntu-20.04
+            os: ubuntu-22.04
           - target: android
             os: ubuntu-latest
           - target: windows

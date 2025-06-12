@@ -11,7 +11,7 @@ jobs:
       matrix:
         include:
           - target: linux
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             path: audiotags/linux/libaudiotags.so
           - target: android
             os: ubuntu-latest
