@@ -1,5 +1,4 @@
 #import "AudiotagsPlugin.h"
-#import "../Runner/bridge_generated.h"
 #if __has_include(<audiotags/audiotags-Swift.h>)
 #import <audiotags/audiotags-Swift.h>
 #else
@@ -11,7 +10,6 @@
 
 @implementation AudiotagsPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  dummy_method_to_enforce_bundling();
   [SwiftAudiotagsPlugin registerWithRegistrar:registrar];
 }
 @end
