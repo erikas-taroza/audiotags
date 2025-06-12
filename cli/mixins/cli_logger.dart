@@ -6,9 +6,8 @@ mixin CliLogger on CliCommand {
   final Logger _logger = Logger();
 
   Logger get logger {
-    _logger.level = argResults?["verbose"] ?? false
-        ? Level.verbose
-        : Level.info;
+    _logger.level =
+        argResults?["verbose"] ?? false ? Level.verbose : Level.info;
     return _logger;
   }
 }
